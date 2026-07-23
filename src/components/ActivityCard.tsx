@@ -8,14 +8,15 @@ import {
     formatPace,
     formatSpeed,
 } from '../lib/formatters';
-import type { StatsVisibility, StravaActivity } from '../server/types';
+import type { StravaActivity } from '../server/types';
 
 interface ActivityCardProps {
     activity: StravaActivity;
 }
 
 export function ActivityCard({ activity }: ActivityCardProps) {
-    const statsVisibility: StatsVisibility = ACTIVITY_GROUPS[getGroupForActivity(activity.sport_type)]?.visibility ?? {}
+    const group = getGroupForActivity(activity.sport_type)
+    const statsVisibility = ACTIVITY_GROUPS[group].visibility
     return (
         <div className="rounded-xl border border-border bg-surface p-4 transition-all hover:shadow-sm">
             <div className="flex items-start justify-between mb-3">
