@@ -13,7 +13,7 @@ interface GroupFilterProps {
 export function GroupFilter({ groups, active, onChange }: GroupFilterProps) {
   return (
     <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
-      {groups.map((group) => {
+      {groups.filter(g => g.name === 'all' || g.count > 0).map((group) => {
         const isActive = group.name === (active ?? 'all')
         return (
           <button
