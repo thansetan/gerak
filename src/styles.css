@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-surface: oklch(98% 0.01 100);
+  --color-surface-secondary: oklch(95% 0.01 100);
+  --color-surface-accent: oklch(62% 0.18 160);
+  --color-surface-accent-hover: oklch(55% 0.2 160);
+  --color-text-primary: oklch(15% 0.02 100);
+  --color-text-secondary: oklch(45% 0.02 100);
+  --color-text-on-accent: oklch(100% 0 0);
+  --color-border: oklch(88% 0.01 100);
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-surface: oklch(15% 0.02 100);
+  --color-surface-secondary: oklch(20% 0.02 100);
+  --color-surface-accent: oklch(62% 0.18 160);
+  --color-surface-accent-hover: oklch(55% 0.2 160);
+  --color-text-primary: oklch(95% 0.01 100);
+  --color-text-secondary: oklch(65% 0.02 100);
+  --color-text-on-accent: oklch(15% 0.02 100);
+  --color-border: oklch(25% 0.02 100);
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-text-primary antialiased;
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  }
+}
