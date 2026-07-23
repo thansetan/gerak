@@ -12,7 +12,12 @@ export function ThemeToggle() {
   const [dark, setDark] = useState(() => getInitialTheme())
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', dark)
+    const toggle = () => document.documentElement.classList.toggle('dark', dark)
+    if ('startViewTransition' in document) {
+      document.startViewTransition(() => toggle())
+    } else {
+      toggle()
+    }
     localStorage.setItem('theme', dark ? 'dark' : 'light')
   }, [dark])
 

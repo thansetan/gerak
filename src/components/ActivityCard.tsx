@@ -36,7 +36,8 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
     return (
         <div
             onClick={onClick}
-            className={`rounded-xl border border-border border-l-4 ${style.accent} bg-surface p-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-l-8 ${onClick ? 'cursor-pointer active:scale-[0.98]' : ''}`}
+            className={`rounded-xl border border-border border-l-4 ${style.accent} bg-surface p-4 duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-l-8 ${onClick ? 'cursor-pointer active:scale-[0.98]' : ''}`}
+            style={{ transitionProperty: 'box-shadow, transform', contentVisibility: 'auto' }}
         >
             <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
