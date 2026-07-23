@@ -1,24 +1,22 @@
 {
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"],
   "compilerOptions": {
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "bundler",
-    "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
     "strict": true,
-    "skipLibCheck": true,
+    "esModuleInterop": true,
     "jsx": "react-jsx",
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "isolatedModules": true,
-    "types": ["@types/bun"],
-    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
     "paths": {
       "~/*": ["./src/*"]
-    }
-  },
-  "include": ["src", "server"]
+    },
+    "noEmit": true,
+    "types": ["@types/bun"]
+  }
 }

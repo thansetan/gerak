@@ -1,8 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-
-const STRAVA_AUTH_URL = 'https://www.strava.com/oauth/authorize'
-const TOKEN_URL = 'https://www.strava.com/oauth/token'
+import { exchangeAuthCode } from '../../server/auth'
 
 interface StravaCallbackSearch {
   code?: string
@@ -38,37 +36,10 @@ function StravaCallback() {
 
     const exchangeCode = async () => {
       try {
-        const clientId = import.meta.env.VITE_STRAVA_CLIENT_ID
-        const clientSecret = import.meta.env.VITE_STRAVA_CLIENT_SECRET
-
-        if (!clientId || !clientSecret) {
-          const res = await fetch('/api/auth/exchange', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code }),
-          })
-          if (!res.ok) throw new Error('Failed to exchange code on server')
-          const data = await res.json()
-          setMessage(
-            `Refresh token obtained: ${data.refresh_token}\n\nAdd this to your .env as STRAVA_REFRESH_TOKEN`,
-          )
-        } else {
-          const res = await fetch(TOKEN_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              client_id: clientId,
-              client_secret: clientSecret,
-              code,
-              grant_type: 'authorization_code',
-            }),
-          })
-          if (!res.ok) throw new Error('Failed to exchange authorization code')
-          const data = await res.json()
-          setMessage(
-            `Your refresh token: ${data.refresh_token}\n\nAdd this to your .env as STRAVA_REFRESH_TOKEN`,
-          )
-        }
+        const result = await exchangeAuthCode({ code })
+        setMessage(
+          `Refresh token obtained: ${result.refresh_token}\n\nAdd this to your .env as STRAVA_REFRESH_TOKEN`,
+        )
         setStatus('success')
       } catch (err) {
         setStatus('error')

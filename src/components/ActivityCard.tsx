@@ -1,5 +1,5 @@
 import type { StravaActivity, StatsVisibility } from '../server/types'
-import { formatDistance, formatDuration, formatPace, formatHeartRate, formatSpeed, formatCadence, formatElevation } from '../lib/formatters'
+import { formatDistance, formatDuration, formatPace, formatHeartRate, formatCadence, formatElevation } from '../lib/formatters'
 
 interface ActivityCardProps {
   activity: StravaActivity

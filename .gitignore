@@ -2,3 +2,9 @@ node_modules/
 dist/
 .env
 *.local
+.output
+.tanstack
+.claude
+.agents
+.opencode
+openspec

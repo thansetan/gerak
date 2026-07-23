@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { refreshActivities } from '../server/activities'
 
 interface HeaderProps {
   syncedAt?: string
@@ -8,7 +9,7 @@ export function Header({ syncedAt }: HeaderProps) {
   const queryClient = useQueryClient()
 
   const handleRefresh = async () => {
-    await fetch('/api/refresh', { method: 'POST' })
+    await refreshActivities()
     queryClient.invalidateQueries({ queryKey: ['activities'] })
   }
 

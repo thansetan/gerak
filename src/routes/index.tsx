@@ -1,5 +1,6 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
+import { getActivities } from '../server/activities'
 import { Header } from '../components/Header'
 import { GroupFilter } from '../components/GroupFilter'
 import { StatsBar } from '../components/StatsBar'
@@ -13,33 +14,30 @@ interface DashboardSearch {
   group?: string
 }
 
-const fetchActivities = async () => {
-  const res = await fetch('/api/activities')
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Failed to fetch activities' }))
-    throw new Error(err.error || 'Failed to fetch activities')
-  }
-  return res.json() as Promise<ActivitiesResponse>
-}
-
 export const Route = createFileRoute('/')({
   validateSearch: (search: Record<string, string | undefined>): DashboardSearch => ({
     group: search.group ?? undefined,
   }),
+  loader: async ({ context: { queryClient } }) => {
+    await queryClient.ensureQueryData({
+      queryKey: ['activities'],
+      queryFn: () => getActivities(),
+    })
+  },
   component: Dashboard,
 })
 
 function Dashboard() {
-  const { group } = useSearch({ from: Route.id })
-  const navigate = useNavigate({ from: Route.id })
+  const { group } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['activities'],
-    queryFn: fetchActivities,
+    queryFn: () => getActivities(),
   })
 
   const activities = data?.activities ?? []
-  const visibility = data?.statsVisibility ?? {}
+  const visibility = data?.statsVisibility ?? ({} as ActivitiesResponse['statsVisibility'])
   const syncedAt = data?.syncedAt
 
   const groupCounts = useGroupCounts(activities)
@@ -48,7 +46,7 @@ function Dashboard() {
   const filteredGroupCounts = useGroupCounts(filtered)
 
   const handleGroupChange = (name: string | null) => {
-    navigate({ search: (prev) => ({ ...prev, group: name ?? undefined }) })
+    navigate({ search: (prev: DashboardSearch) => ({ ...prev, group: name ?? undefined }) })
   }
 
   if (isError) {
@@ -71,7 +69,7 @@ function Dashboard() {
       ) : (
         <>
           <GroupFilter
-            groups={groupCounts}
+            groups={filteredGroupCounts}
             active={group ?? 'all'}
             onChange={handleGroupChange}
           />

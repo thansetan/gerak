@@ -1,3 +1,4 @@
+import { createServerFn } from '@tanstack/react-start'
 import { getFromCache, setToCache, deleteCacheKey } from './cache'
 import { getAccessToken } from './auth'
 import { STATS_VISIBILITY } from './config'
@@ -6,14 +7,18 @@ import type { StravaActivity, ActivitiesResponse } from './types'
 const ACTIVITIES_CACHE_KEY = 'strava:activities:200'
 const ACTIVITIES_TTL = 3600
 
-export async function getActivities(): Promise<ActivitiesResponse> {
-  const cached = await getFromCache<ActivitiesResponse>(ACTIVITIES_CACHE_KEY)
-  if (cached) {
-    return cached
-  }
+export const getActivities = createServerFn()
+  .handler(async () => {
+    const cached = await getFromCache<ActivitiesResponse>(ACTIVITIES_CACHE_KEY)
+    if (cached) return cached
+    return fetchActivitiesFromStrava()
+  })
 
-  return fetchActivitiesFromStrava()
-}
+export const refreshActivities = createServerFn({ method: 'POST' })
+  .handler(async () => {
+    await deleteCacheKey(ACTIVITIES_CACHE_KEY)
+    return { syncedAt: new Date().toISOString() }
+  })
 
 async function fetchActivitiesFromStrava(): Promise<ActivitiesResponse> {
   const token = await getAccessToken()
@@ -66,9 +71,4 @@ function handleApiError(response: Response): never {
     throw new Error('Authentication with Strava failed. Token refresh unsuccessful.')
   }
   throw new Error(`Strava API error: ${response.status} ${response.statusText}`)
-}
-
-export async function refreshActivities(): Promise<{ syncedAt: string }> {
-  await deleteCacheKey(ACTIVITIES_CACHE_KEY)
-  return { syncedAt: new Date().toISOString() }
 }

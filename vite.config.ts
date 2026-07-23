@@ -1,20 +1,22 @@
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
+import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import tsconfigPaths from 'vite-tsconfig-paths'
+import { nitro } from 'nitro/vite'
 
 export default defineConfig({
-  plugins: [
-    TanStackRouterVite(),
-    react(),
-    tailwindcss(),
-    tsconfigPaths({ projects: ['./tsconfig.json'] }),
-  ],
   server: {
     port: 3000,
-    proxy: {
-      '/api': 'http://localhost:3001',
-    },
   },
+  resolve: {
+    tsconfigPaths: true,
+  },
+  plugins: [
+    tailwindcss(),
+    tanstackStart({
+      srcDirectory: 'src',
+    }),
+    viteReact(),
+    nitro({ preset: 'bun' }),
+  ],
 })

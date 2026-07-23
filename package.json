@@ -4,27 +4,26 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run server/index.ts & bun run vite",
-    "vite": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "bun --bun vite dev",
+    "build": "bun --bun vite build",
+    "start": "bun run .output/server/index.mjs",
     "test": "bun test"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.62.0",
-    "@tanstack/react-router": "^1.98.0",
-    "@tanstack/router-plugin": "^1.98.0",
+    "@tanstack/react-query": "^5.90.0",
+    "@tanstack/react-router": "^1.170.18",
+    "@tanstack/react-start": "^1.168.32",
     "@upstash/redis": "^1.34.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.0",
+    "@tailwindcss/vite": "^4.2.2",
     "@types/bun": "^1.1.0",
-    "@vitejs/plugin-react": "^4.3.0",
-    "tailwindcss": "^4.0.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "nitro": "^3.0.260311-beta",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.7.0",
-    "vite": "^6.0.0",
-    "vite-tsconfig-paths": "^5.1.0"
+    "vite": "^8.0.0"
   }
 }
