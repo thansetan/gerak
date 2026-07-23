@@ -23,38 +23,15 @@ export function ThemeToggle() {
 
   return (
     <button
-      role="switch"
-      aria-checked={dark}
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={() => setDark((d) => !d)}
-      className="relative w-[80px] h-[34px] rounded-full bg-surface-secondary 
-                 border border-border cursor-pointer
-                 transition-colors duration-300
+      className="text-2xl cursor-pointer select-none
+                 transition-transform duration-200 hover:scale-110 active:scale-95
                  focus-visible:outline-2 focus-visible:outline-offset-2
-                 focus-visible:outline-indigo-500 dark:focus-visible:outline-amber-400"
+                 focus-visible:outline-indigo-500 dark:focus-visible:outline-amber-400
+                 rounded-md"
     >
-      <span
-        className="absolute z-10 left-[12px] top-1/2 -translate-y-1/2 text-sm
-                   transition-opacity duration-300 select-none"
-        style={{ opacity: dark ? 0.35 : 1 }}
-      >
-        ☀️
-      </span>
-      <span
-        className="absolute z-10 right-[12px] top-1/2 -translate-y-1/2 text-sm
-                   transition-opacity duration-300 select-none"
-        style={{ opacity: dark ? 1 : 0.35 }}
-      >
-        🌙
-      </span>
-      <span
-        className={[
-          'absolute top-0 w-[40px] h-full rounded-full',
-          'bg-white dark:bg-gray-700 shadow-md',
-          'transition-[left] duration-300 ease-in-out',
-          dark ? 'left-[40px]' : 'left-0',
-        ].join(' ')}
-      />
+      {dark ? '🌙' : '☀️'}
     </button>
   )
 }
