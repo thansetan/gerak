@@ -4,9 +4,10 @@ interface HeaderProps {
   syncedAt?: string
   athleteName?: string
   profileUrl?: string
+  activitiesCount?: number
 }
 
-export function Header({ syncedAt, athleteName, profileUrl }: HeaderProps) {
+export function Header({ syncedAt, athleteName, profileUrl, activitiesCount }: HeaderProps) {
   return (
     <header className="flex items-center justify-between border-b border-border pb-4 mb-6">
       <div>
@@ -14,7 +15,7 @@ export function Header({ syncedAt, athleteName, profileUrl }: HeaderProps) {
           🏃 berGerak 🔥
         </h1>
         <p className="text-xs text-text-secondary mt-0.5">
-          {athleteName ? `${athleteName}'s last 200 perGerakan` : '🚀 last 200 perGerakan 🚀'}
+          {athleteName ? `${athleteName}'s latest ${activitiesCount || 0} perGerakan` : `🚀 latest ${activitiesCount || 0} perGerakan 🚀`}
         </p>
         {syncedAt && (
           <p className="text-sm text-text-secondary mt-1">

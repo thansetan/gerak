@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start';
 import { getAccessToken } from './auth';
 import { getFromCache, setToCache } from './cache';
 import type { ActivitiesResponse, StravaActivity } from './types';
+import { MAX_FETCHED_ACTIVITIES } from './config';
 
 const ACTIVITIES_CACHE_KEY = 'strava:activities:200';
 const ACTIVITIES_TTL = 3600;
@@ -16,7 +17,7 @@ async function fetchActivitiesFromStrava(): Promise<ActivitiesResponse> {
     const token = await getAccessToken();
 
     const response = await fetch(
-        'https://www.strava.com/api/v3/athlete/activities?per_page=200',
+        `https://www.strava.com/api/v3/athlete/activities?per_page=${MAX_FETCHED_ACTIVITIES}`,
         {
             headers: {
                 Authorization: `Bearer ${token}`,

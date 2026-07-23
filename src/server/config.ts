@@ -109,3 +109,5 @@ export const APP_CONFIG: AppConfig = {
         achievements: 'show',
     },
 };
+
+export const MAX_FETCHED_ACTIVITIES: number = 200;

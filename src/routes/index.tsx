@@ -90,7 +90,7 @@ function Dashboard() {
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-6">
-      <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} />
+      <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} activitiesCount={activities.length} />
       {isLoading ? (
         <LoadingSkeleton />
       ) : (
