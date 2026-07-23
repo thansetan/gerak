@@ -2,15 +2,15 @@ import type { ActivityGroup, StatsVisibility } from './types';
 
 function defaultVisibility(): StatsVisibility {
     return {
-        distance: { show: true, label: 'Distance', unit: 'km' },
-        avgHeartRate: { show: true, label: 'Avg HR', unit: 'bpm' },
-        maxHeartRate: { show: true, label: 'Max HR', unit: 'bpm' },
-        pace: { show: true, label: 'Avg Pace', unit: '/km' },
-        avgPower: { show: true, label: 'Avg Power', unit: 'W' },
-        cadence: { show: true, label: 'Avg Cadence', unit: 'spm' },
-        elevation: { show: true, label: 'Elevation', unit: 'm' },
-        totalDistance: { show: true, label: 'Total Distance', unit: 'km' },
-        totalElevation: { show: true, label: 'Elevation', unit: 'm' },
+        distance: { state: 'show', label: 'Distance', unit: 'km' },
+        avgHeartRate: { state: 'show', label: 'Avg HR', unit: 'bpm' },
+        maxHeartRate: { state: 'show', label: 'Max HR', unit: 'bpm' },
+        pace: { state: 'show', label: 'Avg Pace', unit: '/km' },
+        avgPower: { state: 'show', label: 'Avg Power', unit: 'W' },
+        cadence: { state: 'show', label: 'Avg Cadence', unit: 'spm' },
+        elevation: { state: 'show', label: 'Elevation', unit: 'm' },
+        totalDistance: { state: 'show', label: 'Total Distance', unit: 'km' },
+        totalElevation: { state: 'show', label: 'Elevation', unit: 'm' },
     };
 }
 
@@ -39,8 +39,8 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: ['Ride', 'MountainBikeRide', 'GravelRide', 'VirtualRide'],
         visibility: {
             ...defaultVisibility(),
-            pace: { show: false, label: 'Avg Pace', unit: '/km' },
-            speed: { show: true, label: 'Avg Speed', unit: 'km/h' },
+            pace: { state: 'hide', label: 'Avg Pace', unit: '/km' },
+            speed: { state: 'show', label: 'Avg Speed', unit: 'km/h' },
         },
     },
     badminton: {
@@ -49,8 +49,8 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: ['Badminton'],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: { show: false, label: 'Total Distance', unit: 'km' },
-            totalElevation: { show: false, label: 'Elevation', unit: 'm' },
+            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km' },
+            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
     },
     strength: {
@@ -59,8 +59,8 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: ['Strength', 'WeightTraining'],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: { show: false, label: 'Total Distance', unit: 'km' },
-            totalElevation: { show: false, label: 'Elevation', unit: 'm' },
+            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km' },
+            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
     },
     other: {
@@ -69,8 +69,8 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: [],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: { show: false, label: 'Total Distance', unit: 'km' },
-            totalElevation: { show: false, label: 'Elevation', unit: 'm' },
+            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km' },
+            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
     },
 };

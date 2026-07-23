@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test'
 import { ACTIVITY_GROUPS } from '../src/server/config'
-import type { ActivityGroup, StatVisibility } from '../src/server/types'
+import type { VisibilityState } from '../src/server/types'
 
 describe('ACTIVITY_GROUPS', () => {
   it('has all required group keys', () => {
@@ -28,9 +28,9 @@ describe('ACTIVITY_GROUPS', () => {
     }
   })
 
-  it('has all stats visible by default for run group', () => {
+  it('default state is show for all stats in run group', () => {
     for (const [, stat] of Object.entries(ACTIVITY_GROUPS.run.visibility)) {
-      expect((stat as StatVisibility).show).toBe(true)
+      expect((stat as { state: VisibilityState }).state).toBe('show')
     }
   })
 
@@ -39,15 +39,15 @@ describe('ACTIVITY_GROUPS', () => {
   })
 
   it('shows speed and hides pace for bike group', () => {
-    expect(ACTIVITY_GROUPS.bike.visibility.speed.show).toBe(true)
+    expect(ACTIVITY_GROUPS.bike.visibility.speed.state).toBe('show')
     expect(ACTIVITY_GROUPS.bike.visibility.speed.unit).toBe('km/h')
-    expect(ACTIVITY_GROUPS.bike.visibility.pace.show).toBe(false)
+    expect(ACTIVITY_GROUPS.bike.visibility.pace.state).toBe('hide')
   })
 
   it('hides total distance and elevation for badminton, strength, and other', () => {
     for (const key of ['badminton', 'strength', 'other']) {
-      expect(ACTIVITY_GROUPS[key].visibility.totalDistance.show).toBe(false)
-      expect(ACTIVITY_GROUPS[key].visibility.totalElevation.show).toBe(false)
+      expect(ACTIVITY_GROUPS[key].visibility.totalDistance.state).toBe('hide')
+      expect(ACTIVITY_GROUPS[key].visibility.totalElevation.state).toBe('hide')
     }
   })
 })

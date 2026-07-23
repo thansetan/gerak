@@ -8,7 +8,7 @@ import {
     formatPace,
     formatSpeed,
 } from '../lib/formatters';
-import type { StravaActivity } from '../server/types';
+import type { StatVisibility, StravaActivity } from '../server/types';
 
 interface ActivityCardProps {
     activity: StravaActivity;
@@ -17,6 +17,14 @@ interface ActivityCardProps {
 export function ActivityCard({ activity }: ActivityCardProps) {
     const group = getGroupForActivity(activity.sport_type)
     const statsVisibility = ACTIVITY_GROUPS[group].visibility
+
+    function renderStat(stat: StatVisibility | undefined, condition: boolean, formatted: string) {
+        if (!stat || stat.state === 'hide') return null
+        if (stat.state === 'mask') return <Metric label={stat.label} value={'●●●'} />
+        if (condition) return <Metric label={stat.label} value={formatted} />
+        return null
+    }
+
     return (
         <div className="rounded-xl border border-border bg-surface p-4 transition-all hover:shadow-sm">
             <div className="flex items-start justify-between mb-3">
@@ -33,59 +41,14 @@ export function ActivityCard({ activity }: ActivityCardProps) {
                 </span>
             </div>
             <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
-                {statsVisibility.distance.show && activity.distance > 0 && (
-                    <Metric
-                        label={statsVisibility.distance.label}
-                        value={formatDistance(activity.distance)}
-                    />
-                )}
-                {statsVisibility.avgHeartRate.show &&
-                    activity.average_heartrate && (
-                        <Metric
-                            label={statsVisibility.avgHeartRate.label}
-                            value={formatHeartRate(activity.average_heartrate)}
-                        />
-                    )}
-                {statsVisibility.maxHeartRate.show &&
-                    activity.max_heartrate && (
-                        <Metric
-                            label={statsVisibility.maxHeartRate.label}
-                            value={formatHeartRate(activity.max_heartrate)}
-                        />
-                    )}
-                {statsVisibility.speed?.show && activity.average_speed > 0 && (
-                    <Metric
-                        label={statsVisibility.speed.label}
-                        value={formatSpeed(activity.average_speed)}
-                    />
-                )}
-                {statsVisibility.pace?.show && activity.average_speed > 0 && (
-                    <Metric
-                        label={statsVisibility.pace.label}
-                        value={formatPace(activity.average_speed)}
-                    />
-                )}
-                {statsVisibility.avgPower.show && activity.average_watts && (
-                    <Metric
-                        label={statsVisibility.avgPower.label}
-                        value={`${Math.round(activity.average_watts)} W`}
-                    />
-                )}
-                {statsVisibility.cadence.show && activity.average_cadence && (
-                    <Metric
-                        label={statsVisibility.cadence.label}
-                        value={formatCadence(activity.average_cadence * 2)}
-                    />
-                )}
-                {statsVisibility.elevation.show &&
-                    activity.total_elevation_gain > 0 && (
-                        <Metric
-                            label={statsVisibility.elevation.label}
-                            value={formatElevation(
-                                activity.total_elevation_gain
-                            )}
-                        />
-                    )}
+                {renderStat(statsVisibility.distance, activity.distance > 0, formatDistance(activity.distance))}
+                {renderStat(statsVisibility.avgHeartRate, !!activity.average_heartrate, formatHeartRate(activity.average_heartrate))}
+                {renderStat(statsVisibility.maxHeartRate, !!activity.max_heartrate, formatHeartRate(activity.max_heartrate))}
+                {renderStat(statsVisibility.speed, activity.average_speed > 0, formatSpeed(activity.average_speed))}
+                {renderStat(statsVisibility.pace, activity.average_speed > 0, formatPace(activity.average_speed))}
+                {renderStat(statsVisibility.avgPower, !!activity.average_watts, `${Math.round(activity.average_watts!)} W`)}
+                {renderStat(statsVisibility.cadence, !!activity.average_cadence, formatCadence(activity.average_cadence! * 2))}
+                {renderStat(statsVisibility.elevation, activity.total_elevation_gain > 0, formatElevation(activity.total_elevation_gain))}
             </div>
         </div>
     );

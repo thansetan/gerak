@@ -5,8 +5,10 @@ export interface ActivityGroup {
     visibility: StatsVisibility;
 }
 
+export type VisibilityState = 'show' | 'hide' | 'mask'
+
 export interface StatVisibility {
-    show: boolean;
+    state: VisibilityState;
     label: string;
     unit: string;
 }

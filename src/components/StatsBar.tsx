@@ -15,15 +15,17 @@ interface StatsBarProps {
 
 export function StatsBar({ stats, group }: StatsBarProps) {
   const visibility = ACTIVITY_GROUPS[group]?.visibility
+
+  function statCard(stat: { state: string; label: string } | undefined, formatted: string) {
+    if (!stat || stat.state === 'hide') return null
+    return <StatCard label={stat.label} value={stat.state === 'mask' ? '●●●' : formatted} />
+  }
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-      {visibility?.totalDistance?.show !== false && (
-        <StatCard label="Total Distance" value={formatDistance(stats.totalDistance)} />
-      )}
+      {statCard(visibility?.totalDistance, formatDistance(stats.totalDistance))}
       <StatCard label="Total Time" value={formatDuration(stats.totalDuration)} />
-      {visibility?.totalElevation?.show !== false && (
-        <StatCard label="Elevation" value={formatElevation(stats.totalElevation)} />
-      )}
+      {statCard(visibility?.totalElevation, formatElevation(stats.totalElevation))}
       <StatCard label="Active Days" value={`${stats.activeDays}`} />
     </div>
   )
