@@ -43,7 +43,6 @@ function Dashboard() {
   const groupCounts = useGroupCounts(activities)
   const filtered = useFilteredActivities(activities, group ?? null)
   const stats = useAggregateStats(filtered)
-  const filteredGroupCounts = useGroupCounts(filtered)
 
   const handleGroupChange = (name: string | null) => {
     navigate({ search: (prev: DashboardSearch) => ({ ...prev, group: name ?? undefined }) })
@@ -69,7 +68,7 @@ function Dashboard() {
       ) : (
         <>
           <GroupFilter
-            groups={filteredGroupCounts}
+            groups={groupCounts}
             active={group ?? 'all'}
             onChange={handleGroupChange}
           />

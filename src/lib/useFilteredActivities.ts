@@ -25,7 +25,7 @@ export function useGroupCounts(activities: StravaActivity[]): GroupCount[] {
     return getGroupNames().map((name) => ({
       name,
       label: getGroupLabel(name),
-      count: counts[name] || 0,
+      count: name === 'all' ? activities.length : (counts[name] || 0),
     }))
   }, [activities])
 }
