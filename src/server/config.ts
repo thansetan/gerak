@@ -49,7 +49,11 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: ['Badminton'],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km' },
+            totalDistance: {
+                state: 'hide',
+                label: 'Total Distance',
+                unit: 'km',
+            },
             totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
     },
@@ -59,7 +63,11 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: ['Strength', 'WeightTraining'],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km' },
+            totalDistance: {
+                state: 'hide',
+                label: 'Total Distance',
+                unit: 'km',
+            },
             totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
     },
@@ -69,7 +77,11 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: [],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km' },
+            totalDistance: {
+                state: 'hide',
+                label: 'Total Distance',
+                unit: 'km',
+            },
             totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
     },
