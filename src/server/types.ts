@@ -78,6 +78,12 @@ export interface ActivitiesResponse {
     syncedAt: string
 }
 
+export interface AthleteProfile {
+    firstname: string
+    lastname: string
+    profile: string
+}
+
 export interface StravaTokenResponse {
     token_type: string
     access_token: string

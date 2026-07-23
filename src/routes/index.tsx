@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { getActivities } from '../server/activities'
+import { getAthlete } from '../server/athlete'
 import { ACTIVITY_GROUPS } from '../server/config'
 import { Header } from '../components/Header'
 import { GroupFilter } from '../components/GroupFilter'
@@ -24,10 +25,16 @@ export const Route = createFileRoute('/')({
     group: search.group ?? undefined,
   }),
   loader: async ({ context: { queryClient } }) => {
-    await queryClient.ensureQueryData({
-      queryKey: ['activities'],
-      queryFn: () => getActivities(),
-    })
+    await Promise.all([
+      queryClient.ensureQueryData({
+        queryKey: ['activities'],
+        queryFn: () => getActivities(),
+      }),
+      queryClient.ensureQueryData({
+        queryKey: ['athlete'],
+        queryFn: () => getAthlete(),
+      }),
+    ])
   },
   component: Dashboard,
 })
@@ -37,6 +44,11 @@ function Dashboard() {
   const [group, setGroup] = useState<string | null>(initialGroup ?? null)
   const [selectedActivity, setSelectedActivity] = useState<StravaActivity | null>(null)
 
+  const { data: athlete } = useQuery({
+    queryKey: ['athlete'],
+    queryFn: () => getAthlete(),
+  })
+
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['activities'],
     queryFn: () => getActivities(),
@@ -44,6 +56,8 @@ function Dashboard() {
 
   const activities = data?.activities ?? []
   const syncedAt = data?.syncedAt
+  const athleteName = athlete ? `${athlete.firstname} ${athlete.lastname}` : undefined
+  const profileUrl = athlete?.profile
 
   const groupCounts = useGroupCounts(activities)
   const filtered = useFilteredActivities(activities, group ?? null)
@@ -65,7 +79,7 @@ function Dashboard() {
   if (isError) {
     return (
       <div className="mx-auto max-w-[1400px] px-4 py-6">
-        <Header syncedAt={syncedAt} />
+        <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} />
         <ErrorState
           message={error instanceof Error ? error.message : 'An unexpected error occurred'}
           onRetry={() => refetch()}
@@ -76,7 +90,7 @@ function Dashboard() {
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-6">
-      <Header syncedAt={syncedAt} />
+      <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} />
       {isLoading ? (
         <LoadingSkeleton />
       ) : (
