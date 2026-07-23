@@ -9,24 +9,106 @@
   --color-text-secondary: oklch(45% 0.02 100);
   --color-text-on-accent: oklch(100% 0 0);
   --color-border: oklch(88% 0.01 100);
+
+  --color-sport-run: oklch(55% 0.2 25);
+  --color-sport-run-bg: oklch(95% 0.04 25);
+  --color-sport-bike: oklch(50% 0.18 250);
+  --color-sport-bike-bg: oklch(93% 0.04 250);
+  --color-sport-walk: oklch(55% 0.15 170);
+  --color-sport-walk-bg: oklch(94% 0.04 170);
+  --color-sport-badminton: oklch(55% 0.2 310);
+  --color-sport-badminton-bg: oklch(94% 0.04 310);
+  --color-sport-strength: oklch(55% 0.18 80);
+  --color-sport-strength-bg: oklch(94% 0.04 80);
+  --color-sport-other: oklch(50% 0.12 0);
+  --color-sport-other-bg: oklch(93% 0.02 0);
+
+  --color-stat-distance: oklch(55% 0.2 260);
+  --color-stat-distance-bg: oklch(93% 0.06 260);
+  --color-stat-time: oklch(60% 0.2 40);
+  --color-stat-time-bg: oklch(94% 0.06 40);
+  --color-stat-elevation: oklch(55% 0.18 160);
+  --color-stat-elevation-bg: oklch(94% 0.05 160);
+  --color-stat-days: oklch(55% 0.2 340);
+  --color-stat-days-bg: oklch(93% 0.06 340);
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 .dark {
-  --color-surface: oklch(15% 0.02 100);
-  --color-surface-secondary: oklch(20% 0.02 100);
+  --color-surface: oklch(12% 0.03 260);
+  --color-surface-secondary: oklch(18% 0.03 260);
   --color-surface-accent: oklch(62% 0.18 160);
   --color-surface-accent-hover: oklch(55% 0.2 160);
   --color-text-primary: oklch(95% 0.01 100);
   --color-text-secondary: oklch(65% 0.02 100);
   --color-text-on-accent: oklch(15% 0.02 100);
-  --color-border: oklch(25% 0.02 100);
+  --color-border: oklch(25% 0.04 260);
+
+  --color-sport-run-bg: oklch(25% 0.06 25);
+  --color-sport-bike-bg: oklch(22% 0.06 250);
+  --color-sport-walk-bg: oklch(22% 0.05 170);
+  --color-sport-badminton-bg: oklch(23% 0.06 310);
+  --color-sport-strength-bg: oklch(24% 0.05 80);
+  --color-sport-other-bg: oklch(22% 0.03 0);
+
+  --color-stat-distance-bg: oklch(22% 0.06 260);
+  --color-stat-time-bg: oklch(23% 0.06 40);
+  --color-stat-elevation-bg: oklch(22% 0.05 160);
+  --color-stat-days-bg: oklch(22% 0.06 340);
 }
 
 @layer base {
   body {
     @apply bg-surface text-text-primary antialiased;
     font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    background-image: radial-gradient(ellipse at 10% 20%, oklch(90%_0.04_260_/_0.3) 0%, transparent 50%),
+                      radial-gradient(ellipse at 90% 80%, oklch(90%_0.04_40_/_0.3) 0%, transparent 50%);
+    background-attachment: fixed;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
+
+  .dark body {
+    background-image: radial-gradient(ellipse at 10% 20%, oklch(20%_0.04_260_/_0.4) 0%, transparent 50%),
+                      radial-gradient(ellipse at 90% 80%, oklch(20%_0.04_40_/_0.4) 0%, transparent 50%);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.shimmer-bg {
+  background: linear-gradient(90deg,
+    oklch(90% 0.03 260 / 0.3) 25%,
+    oklch(90% 0.03 40 / 0.5) 50%,
+    oklch(90% 0.03 260 / 0.3) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.dark .shimmer-bg {
+  background: linear-gradient(90deg,
+    oklch(25% 0.03 260 / 0.3) 25%,
+    oklch(25% 0.03 40 / 0.5) 50%,
+    oklch(25% 0.03 260 / 0.3) 75%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

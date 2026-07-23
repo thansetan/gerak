@@ -38,3 +38,26 @@ export function formatCadence(rpm?: number): string {
 export function formatElevation(meters: number): string {
   return `${Math.round(meters)} m`
 }
+
+export function formatDurationFull(seconds: number): string {
+  const h = Math.floor(seconds / 3600)
+  const m = Math.floor((seconds % 3600) / 60)
+  const s = seconds % 60
+  if (h > 0) return `${h}h ${m}m ${s}s`
+  if (m > 0) return `${m}m ${s}s`
+  return `${s}s`
+}
+
+export function formatKilojoules(kj?: number): string | null {
+  if (kj == null || kj <= 0) return null
+  return `${Math.round(kj * 0.239)} kcal`
+}
+
+export function formatSpeedKmh(metersPerSecond: number): string {
+  const kmh = metersPerSecond * 3.6
+  return `${kmh.toFixed(1)} km/h`
+}
+
+export function formatNumber(val: number, suffix = ''): string {
+  return `${Math.round(val)}${suffix}`
+}

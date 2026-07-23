@@ -1,51 +1,55 @@
-import type { ActivityGroup, StatsVisibility } from './types';
+import type { ActivityGroup, StatsVisibility, AppConfig } from './types';
 
 function defaultVisibility(): StatsVisibility {
     return {
-        distance: { state: 'show', label: 'Distance', unit: 'km' },
-        avgHeartRate: { state: 'show', label: 'Avg HR', unit: 'bpm' },
-        maxHeartRate: { state: 'show', label: 'Max HR', unit: 'bpm' },
-        pace: { state: 'show', label: 'Avg Pace', unit: '/km' },
-        avgPower: { state: 'show', label: 'Avg Power', unit: 'W' },
-        cadence: { state: 'show', label: 'Avg Cadence', unit: 'spm' },
-        elevation: { state: 'show', label: 'Elevation', unit: 'm' },
-        totalDistance: { state: 'show', label: 'Total Distance', unit: 'km' },
-        totalElevation: { state: 'show', label: 'Elevation', unit: 'm' },
+        distance: { state: 'show', label: '📏 Distance', unit: 'km' },
+        avgHeartRate: { state: 'show', label: '💓 Avg HR', unit: 'bpm' },
+        maxHeartRate: { state: 'show', label: '💗 Max HR', unit: 'bpm' },
+        pace: { state: 'show', label: '⏱️ Pace', unit: '/km' },
+        avgPower: { state: 'show', label: '⚡ Power', unit: 'W' },
+        cadence: { state: 'show', label: '🔄 Cadence', unit: 'spm' },
+        elevation: { state: 'show', label: '⛰️ Elevation', unit: 'm' },
+        totalDistance: { state: 'show', label: '🛣️ Distance', unit: 'km' },
+        totalElevation: { state: 'show', label: '🏔️ Elevation', unit: 'm' },
     };
 }
 
 export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
     all: {
         name: 'all',
-        label: 'All',
+        label: '📋 All',
         sportTypes: null,
         visibility: defaultVisibility(),
+        cardClick: 'modal',
     },
     run: {
         name: 'run',
-        label: 'Run',
+        label: '🏃 Run',
         sportTypes: ['Run', 'TrailRun', 'VirtualRun'],
         visibility: defaultVisibility(),
+        cardClick: 'modal',
     },
     walk: {
         name: 'walk',
-        label: 'Walk',
+        label: '🚶 Walk',
         sportTypes: ['Walk'],
         visibility: defaultVisibility(),
+        cardClick: 'modal',
     },
     bike: {
         name: 'bike',
-        label: 'Bike',
+        label: '🚴 Bike',
         sportTypes: ['Ride', 'MountainBikeRide', 'GravelRide', 'VirtualRide'],
         visibility: {
             ...defaultVisibility(),
             pace: { state: 'hide', label: 'Avg Pace', unit: '/km' },
             speed: { state: 'show', label: 'Avg Speed', unit: 'km/h' },
         },
+        cardClick: 'modal',
     },
     badminton: {
         name: 'badminton',
-        label: 'Badminton',
+        label: '🏸 Badminton',
         sportTypes: ['Badminton'],
         visibility: {
             ...defaultVisibility(),
@@ -56,10 +60,11 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
             },
             totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
+        cardClick: 'modal',
     },
     strength: {
         name: 'strength',
-        label: 'Strength',
+        label: '💪 Strength',
         sportTypes: ['Strength', 'WeightTraining'],
         visibility: {
             ...defaultVisibility(),
@@ -70,10 +75,11 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
             },
             totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
+        cardClick: 'modal',
     },
     other: {
         name: 'other',
-        label: 'Other',
+        label: '🎯 Other',
         sportTypes: [],
         visibility: {
             ...defaultVisibility(),
@@ -84,5 +90,20 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
             },
             totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
         },
+        cardClick: 'modal',
+    },
+};
+
+export const APP_CONFIG: AppConfig = {
+    cardClick: 'modal',
+    modal: {
+        showMinimap: true,
+        maxSpeed: 'show',
+        maxPower: 'show',
+        weightedPower: 'show',
+        calories: 'show',
+        elevRange: 'show',
+        device: 'show',
+        achievements: 'show',
     },
 };

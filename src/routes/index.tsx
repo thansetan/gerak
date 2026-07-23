@@ -1,13 +1,18 @@
+import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { getActivities } from '../server/activities'
+import { ACTIVITY_GROUPS } from '../server/config'
 import { Header } from '../components/Header'
 import { GroupFilter } from '../components/GroupFilter'
 import { StatsBar } from '../components/StatsBar'
 import { ActivityList } from '../components/ActivityList'
+import { ActivityModal } from '../components/ActivityModal'
 import { ErrorState } from '../components/ErrorState'
 import { LoadingSkeleton } from '../components/LoadingSkeleton'
+import { getGroupForActivity } from '../lib/groups'
 import { useFilteredActivities, useGroupCounts, useAggregateStats } from '../lib/useFilteredActivities'
+import type { StravaActivity } from '../server/types'
 
 interface DashboardSearch {
   group?: string
@@ -29,6 +34,7 @@ export const Route = createFileRoute('/')({
 function Dashboard() {
   const { group } = Route.useSearch()
   const navigate = Route.useNavigate()
+  const [selectedActivity, setSelectedActivity] = useState<StravaActivity | null>(null)
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['activities'],
@@ -45,6 +51,15 @@ function Dashboard() {
   const handleGroupChange = (name: string | null) => {
     navigate({ search: (prev: DashboardSearch) => ({ ...prev, group: name ?? undefined }) })
   }
+
+  const handleCardClick = (activity: StravaActivity) => {
+    const g = getGroupForActivity(activity.sport_type)
+    if (ACTIVITY_GROUPS[g]?.cardClick === 'modal') {
+      setSelectedActivity(activity)
+    }
+  }
+
+  const handleCloseModal = () => setSelectedActivity(null)
 
   if (isError) {
     return (
@@ -74,8 +89,11 @@ function Dashboard() {
           {isFetching && !isLoading && (
             <p className="text-xs text-text-secondary mb-2">Refreshing...</p>
           )}
-          <ActivityList activities={filtered} />
+          <ActivityList activities={filtered} onCardClick={handleCardClick} />
         </>
+      )}
+      {selectedActivity && (
+        <ActivityModal activity={selectedActivity} onClose={handleCloseModal} />
       )}
     </div>
   )
