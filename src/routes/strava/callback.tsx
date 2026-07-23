@@ -69,7 +69,7 @@ function StravaCallback() {
       {status === 'success' && (
         <button
           onClick={() => navigate({ to: '/' })}
-          className="mt-6 rounded-lg bg-surface-accent px-6 py-3 text-sm font-medium text-text-on-accent transition-all hover:bg-surface-accent-hover active:scale-[0.98]"
+          className="mt-6 rounded-lg bg-surface-accent px-6 py-3 text-sm font-medium text-text-on-accent transition-all cursor-pointer hover:bg-surface-accent-hover active:scale-[0.98]"
         >
           Go to Dashboard
         </button>

@@ -88,7 +88,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                         <span className="text-2xl">{emoji}</span>
                         <button
                             onClick={handleClose}
-                            className="rounded-full p-1.5 text-text-secondary hover:bg-surface-secondary transition-colors text-lg leading-none"
+                            className="rounded-full p-1.5 text-text-secondary hover:bg-surface-secondary transition-colors cursor-pointer text-lg leading-none"
                             aria-label="Close"
                         >
                             ✕

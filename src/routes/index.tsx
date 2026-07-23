@@ -9,6 +9,7 @@ import { StatsBar } from '../components/StatsBar'
 import { ActivityList } from '../components/ActivityList'
 import { ActivityModal } from '../components/ActivityModal'
 import { ErrorState } from '../components/ErrorState'
+import { BackToTop } from '../components/BackToTop'
 import { LoadingSkeleton } from '../components/LoadingSkeleton'
 import { getGroupForActivity } from '../lib/groups'
 import { useFilteredActivities, useGroupCounts, useAggregateStats } from '../lib/useFilteredActivities'
@@ -95,6 +96,7 @@ function Dashboard() {
       {selectedActivity && (
         <ActivityModal activity={selectedActivity} onClose={handleCloseModal} />
       )}
+      <BackToTop />
     </div>
   )
 }
