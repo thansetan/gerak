@@ -32,8 +32,8 @@ export const Route = createFileRoute('/')({
 })
 
 function Dashboard() {
-  const { group } = Route.useSearch()
-  const navigate = Route.useNavigate()
+  const { group: initialGroup } = Route.useSearch()
+  const [group, setGroup] = useState<string | null>(initialGroup ?? null)
   const [selectedActivity, setSelectedActivity] = useState<StravaActivity | null>(null)
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
@@ -49,7 +49,7 @@ function Dashboard() {
   const stats = useAggregateStats(filtered)
 
   const handleGroupChange = (name: string | null) => {
-    navigate({ search: (prev: DashboardSearch) => ({ ...prev, group: name ?? undefined }) })
+    setGroup(name)
   }
 
   const handleCardClick = (activity: StravaActivity) => {
