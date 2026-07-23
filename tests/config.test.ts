@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'bun:test'
-import { ACTIVITY_GROUPS, STATS_VISIBILITY } from '../src/server/config'
+import { ACTIVITY_GROUPS, GROUP_VISIBILITY } from '../src/server/config'
+import type { StatVisibility } from '../src/server/types'
 
 describe('ACTIVITY_GROUPS', () => {
   it('has all group with null sportTypes', () => {
@@ -26,26 +27,26 @@ describe('ACTIVITY_GROUPS', () => {
   })
 })
 
-describe('STATS_VISIBILITY', () => {
-  it('has all required stat keys', () => {
-    expect(Object.keys(STATS_VISIBILITY).sort()).toEqual([
-      'avgHeartRate',
-      'avgPower',
-      'cadence',
-      'distance',
-      'elevation',
-      'maxHeartRate',
-      'pace',
+describe('GROUP_VISIBILITY', () => {
+  it('has entries for all activity groups', () => {
+    expect(Object.keys(GROUP_VISIBILITY).sort()).toEqual([
+      'all', 'badminton', 'bike', 'other', 'run', 'strength', 'walk',
     ])
   })
 
-  it('has all stats visible by default', () => {
-    for (const [, stat] of Object.entries(STATS_VISIBILITY)) {
-      expect(stat.show).toBe(true)
+  it('has all stats visible by default for run group', () => {
+    for (const [, stat] of Object.entries(GROUP_VISIBILITY.run)) {
+      expect((stat as StatVisibility).show).toBe(true)
     }
   })
 
-  it('has distance with km unit', () => {
-    expect(STATS_VISIBILITY.distance.unit).toBe('km')
+  it('has distance with km unit for run group', () => {
+    expect(GROUP_VISIBILITY.run.distance.unit).toBe('km')
+  })
+
+  it('shows speed and hides pace for bike group', () => {
+    expect(GROUP_VISIBILITY.bike.speed.show).toBe(true)
+    expect(GROUP_VISIBILITY.bike.speed.unit).toBe('km/h')
+    expect(GROUP_VISIBILITY.bike.pace.show).toBe(false)
   })
 })

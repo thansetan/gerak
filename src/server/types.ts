@@ -44,7 +44,7 @@ export interface StravaActivity {
 
 export interface ActivitiesResponse {
     activities: StravaActivity[];
-    statsVisibility: StatsVisibility;
+    statsVisibility: Record<string, StatsVisibility>;
     syncedAt: string;
 }
 

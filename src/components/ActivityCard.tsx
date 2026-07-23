@@ -1,4 +1,3 @@
-import { getGroupForActivity } from '../lib/groups';
 import {
     formatCadence,
     formatDistance,
@@ -51,12 +50,16 @@ export function ActivityCard({ activity, statsVisibility }: ActivityCardProps) {
                             value={formatHeartRate(activity.max_heartrate)}
                         />
                     )}
-                {statsVisibility.pace.show && activity.average_speed > 0 && (
+                {statsVisibility.speed?.show && activity.average_speed > 0 && (
                     <Metric
-                        label={getGroupForActivity(activity.sport_type) === 'bike' ? 'Speed' : statsVisibility.pace.label}
-                        value={getGroupForActivity(activity.sport_type) === 'bike'
-                            ? formatSpeed(activity.average_speed)
-                            : formatPace(activity.average_speed)}
+                        label={statsVisibility.speed.label}
+                        value={formatSpeed(activity.average_speed)}
+                    />
+                )}
+                {statsVisibility.pace?.show && activity.average_speed > 0 && (
+                    <Metric
+                        label={statsVisibility.pace.label}
+                        value={formatPace(activity.average_speed)}
                     />
                 )}
                 {statsVisibility.avgPower.show && activity.average_watts && (

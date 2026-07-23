@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start';
 import { getAccessToken } from './auth';
 import { getFromCache, setToCache } from './cache';
-import { STATS_VISIBILITY } from './config';
+import { GROUP_VISIBILITY } from './config';
 import type { ActivitiesResponse, StravaActivity } from './types';
 
 const ACTIVITIES_CACHE_KEY = 'strava:activities:200';
@@ -50,7 +50,7 @@ async function fetchActivitiesFromStrava(): Promise<ActivitiesResponse> {
 function buildResponse(activities: StravaActivity[]): ActivitiesResponse {
     const result: ActivitiesResponse = {
         activities,
-        statsVisibility: STATS_VISIBILITY,
+        statsVisibility: GROUP_VISIBILITY,
         syncedAt: new Date().toISOString(),
     };
     setToCache(ACTIVITIES_CACHE_KEY, result, ACTIVITIES_TTL);

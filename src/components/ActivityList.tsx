@@ -1,9 +1,10 @@
+import { getGroupForActivity } from '../lib/groups'
 import type { StravaActivity, StatsVisibility } from '../server/types'
 import { ActivityCard } from './ActivityCard'
 
 interface ActivityListProps {
   activities: StravaActivity[]
-  statsVisibility: StatsVisibility
+  statsVisibility: Record<string, StatsVisibility>
 }
 
 export function ActivityList({ activities, statsVisibility }: ActivityListProps) {
@@ -24,7 +25,7 @@ export function ActivityList({ activities, statsVisibility }: ActivityListProps)
         <ActivityCard
           key={activity.id}
           activity={activity}
-          statsVisibility={statsVisibility}
+          statsVisibility={statsVisibility[getGroupForActivity(activity.sport_type)] ?? {} as StatsVisibility}
         />
       ))}
     </div>
