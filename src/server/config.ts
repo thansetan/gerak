@@ -1,27 +1,5 @@
 import type { ActivityGroup, StatsVisibility } from './types';
 
-export const ACTIVITY_GROUPS: ActivityGroup[] = [
-    { name: 'all', label: 'All', sportTypes: null },
-    {
-        name: 'run',
-        label: 'Run',
-        sportTypes: ['Run', 'TrailRun', 'VirtualRun'],
-    },
-    { name: 'walk', label: 'Walk', sportTypes: ['Walk'] },
-    {
-        name: 'bike',
-        label: 'Bike',
-        sportTypes: ['Ride', 'MountainBikeRide', 'GravelRide', 'VirtualRide'],
-    },
-    { name: 'badminton', label: 'Badminton', sportTypes: ['Badminton'] },
-    {
-        name: 'strength',
-        label: 'Strength',
-        sportTypes: ['Strength', 'WeightTraining'],
-    },
-    { name: 'other', label: 'Other', sportTypes: [] },
-];
-
 function defaultVisibility(): StatsVisibility {
     return {
         distance: { show: true, label: 'Distance', unit: 'km' },
@@ -34,16 +12,21 @@ function defaultVisibility(): StatsVisibility {
     };
 }
 
-export const GROUP_VISIBILITY: Record<string, StatsVisibility> = {
-    all: defaultVisibility(),
-    run: defaultVisibility(),
-    walk: defaultVisibility(),
+export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
+    all: { name: 'all', label: 'All', sportTypes: null, visibility: defaultVisibility() },
+    run: { name: 'run', label: 'Run', sportTypes: ['Run', 'TrailRun', 'VirtualRun'], visibility: defaultVisibility() },
+    walk: { name: 'walk', label: 'Walk', sportTypes: ['Walk'], visibility: defaultVisibility() },
     bike: {
-        ...defaultVisibility(),
-        pace: { show: false, label: 'Pace', unit: '/km' },
-        speed: { show: true, label: 'Speed', unit: 'km/h' },
+        name: 'bike',
+        label: 'Bike',
+        sportTypes: ['Ride', 'MountainBikeRide', 'GravelRide', 'VirtualRide'],
+        visibility: {
+            ...defaultVisibility(),
+            pace: { show: false, label: 'Pace', unit: '/km' },
+            speed: { show: true, label: 'Speed', unit: 'km/h' },
+        },
     },
-    badminton: defaultVisibility(),
-    strength: defaultVisibility(),
-    other: defaultVisibility(),
+    badminton: { name: 'badminton', label: 'Badminton', sportTypes: ['Badminton'], visibility: defaultVisibility() },
+    strength: { name: 'strength', label: 'Strength', sportTypes: ['Strength', 'WeightTraining'], visibility: defaultVisibility() },
+    other: { name: 'other', label: 'Other', sportTypes: [], visibility: defaultVisibility() },
 };

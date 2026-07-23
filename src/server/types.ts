@@ -2,6 +2,7 @@ export interface ActivityGroup {
     name: string;
     label: string;
     sportTypes: string[] | null;
+    visibility: StatsVisibility;
 }
 
 export interface StatVisibility {
@@ -44,7 +45,6 @@ export interface StravaActivity {
 
 export interface ActivitiesResponse {
     activities: StravaActivity[];
-    statsVisibility: Record<string, StatsVisibility>;
     syncedAt: string;
 }
 

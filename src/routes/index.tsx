@@ -8,7 +8,6 @@ import { ActivityList } from '../components/ActivityList'
 import { ErrorState } from '../components/ErrorState'
 import { LoadingSkeleton } from '../components/LoadingSkeleton'
 import { useFilteredActivities, useGroupCounts, useAggregateStats } from '../lib/useFilteredActivities'
-import type { ActivitiesResponse } from '../server/types'
 
 interface DashboardSearch {
   group?: string
@@ -37,7 +36,6 @@ function Dashboard() {
   })
 
   const activities = data?.activities ?? []
-  const visibility = data?.statsVisibility ?? ({} as ActivitiesResponse['statsVisibility'])
   const syncedAt = data?.syncedAt
 
   const groupCounts = useGroupCounts(activities)
@@ -76,7 +74,7 @@ function Dashboard() {
           {isFetching && !isLoading && (
             <p className="text-xs text-text-secondary mb-2">Refreshing...</p>
           )}
-          <ActivityList activities={filtered} statsVisibility={visibility} />
+          <ActivityList activities={filtered} />
         </>
       )}
     </div>

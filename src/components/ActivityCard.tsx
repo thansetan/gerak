@@ -1,3 +1,5 @@
+import { ACTIVITY_GROUPS } from '../server/config';
+import { getGroupForActivity } from '../lib/groups';
 import {
     formatCadence,
     formatDistance,
@@ -10,10 +12,10 @@ import type { StatsVisibility, StravaActivity } from '../server/types';
 
 interface ActivityCardProps {
     activity: StravaActivity;
-    statsVisibility: StatsVisibility;
 }
 
-export function ActivityCard({ activity, statsVisibility }: ActivityCardProps) {
+export function ActivityCard({ activity }: ActivityCardProps) {
+    const statsVisibility: StatsVisibility = ACTIVITY_GROUPS[getGroupForActivity(activity.sport_type)]?.visibility ?? {}
     return (
         <div className="rounded-xl border border-border bg-surface p-4 transition-all hover:shadow-sm">
             <div className="flex items-start justify-between mb-3">
