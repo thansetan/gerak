@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
 import { getGroupForActivity } from '../lib/groups'
 import { Minimap } from './Minimap'
@@ -30,10 +30,16 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const colors = SPORT_COLORS[group] ?? SPORT_COLORS.other
 
     const ref = useRef<HTMLDivElement>(null)
+    const [closing, setClosing] = useState(false)
+
+    function handleClose() {
+        setClosing(true)
+        setTimeout(() => onClose(), 150)
+    }
 
     useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
-            if (e.key === 'Escape') onClose()
+            if (e.key === 'Escape') handleClose()
         }
         document.addEventListener('keydown', onKeyDown)
         document.body.style.overflow = 'hidden'
@@ -41,13 +47,13 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
             document.removeEventListener('keydown', onKeyDown)
             document.body.style.overflow = ''
         }
-    }, [onClose])
+    }, [])
 
     const hasDistance = activity.distance > 0
     const showPace = vis.pace?.state !== 'hide' && activity.average_speed > 0
     const showSpeed = vis.speed?.state === 'show' && activity.average_speed > 0
 
-    const showElevRange = modal.elevRange === 'show' && activity.elev_high != null
+    const showElevRange = modal.elevRange === 'show' && activity.elev_high != null && group !== 'badminton'
     const showMaxSpeed = modal.maxSpeed === 'show' && activity.max_speed > 0
     const showMaxPower = modal.maxPower === 'show' && activity.max_watts != null
     const showWeightedPower = modal.weightedPower === 'show' && activity.weighted_average_watts != null
@@ -61,13 +67,13 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            onClick={onClose}
+            onClick={handleClose}
         >
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+            <div className={`absolute inset-0 bg-black/40 backdrop-blur-sm ${closing ? 'animate-[fadeOut_0.15s_ease-in]' : ''}`} />
             <div
                 ref={ref}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-surface shadow-2xl animate-[fadeIn_0.2s_ease-out]"
+                className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-surface shadow-2xl ${closing ? 'animate-[fadeOut_0.15s_ease-in]' : 'animate-[fadeIn_0.2s_ease-out]'}`}
             >
                 <div className="sticky top-0 z-10 flex items-start justify-between bg-surface p-5 pb-3 border-b border-border">
                     <div className="flex-1 min-w-0">
@@ -81,7 +87,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                     <div className="flex items-center gap-2 shrink-0 ml-3">
                         <span className="text-2xl">{emoji}</span>
                         <button
-                            onClick={onClose}
+                            onClick={handleClose}
                             className="rounded-full p-1.5 text-text-secondary hover:bg-surface-secondary transition-colors text-lg leading-none"
                             aria-label="Close"
                         >
@@ -228,7 +234,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                         </>
                     )}
 
-                    {(showDevice || showAchievements || activity.kudos_count != null || activity.suffer_score != null) && (
+                    {(showDevice || showAchievements || activity.private || activity.commute || activity.trainer || activity.manual) && (
                         <>
                             <div className="border-t border-border pt-4">
                                 <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-3">
@@ -248,9 +254,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                                 <span className="text-text-secondary">👍 {activity.kudos_count ?? 0} kudos</span>
                                             </>
                                         )}
-                                        {activity.suffer_score != null && (
-                                            <span className="text-text-secondary">😤 Suffer score: {activity.suffer_score}</span>
-                                        )}
+
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {activity.private && (
@@ -266,9 +270,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                             <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">✏️ Manual</span>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-2 pt-1 text-xs text-text-secondary">
-                                        <span>🔢 {activity.id}</span>
-                                    </div>
+
                                 </div>
                             </div>
                         </>
