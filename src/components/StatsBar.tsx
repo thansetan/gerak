@@ -1,3 +1,4 @@
+import { ACTIVITY_GROUPS } from '../server/config'
 import { formatDistance, formatDuration, formatElevation } from '../lib/formatters'
 
 interface AggregateStats {
@@ -9,14 +10,20 @@ interface AggregateStats {
 
 interface StatsBarProps {
   stats: AggregateStats
+  group: string
 }
 
-export function StatsBar({ stats }: StatsBarProps) {
+export function StatsBar({ stats, group }: StatsBarProps) {
+  const visibility = ACTIVITY_GROUPS[group]?.visibility
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-      <StatCard label="Total Distance" value={formatDistance(stats.totalDistance)} />
+      {visibility?.totalDistance?.show !== false && (
+        <StatCard label="Total Distance" value={formatDistance(stats.totalDistance)} />
+      )}
       <StatCard label="Total Time" value={formatDuration(stats.totalDuration)} />
-      <StatCard label="Elevation" value={formatElevation(stats.totalElevation)} />
+      {visibility?.totalElevation?.show !== false && (
+        <StatCard label="Elevation" value={formatElevation(stats.totalElevation)} />
+      )}
       <StatCard label="Active Days" value={`${stats.activeDays}`} />
     </div>
   )

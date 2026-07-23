@@ -70,7 +70,7 @@ function Dashboard() {
             active={group ?? 'all'}
             onChange={handleGroupChange}
           />
-          <StatsBar stats={stats} />
+          <StatsBar stats={stats} group={group ?? 'all'} />
           {isFetching && !isLoading && (
             <p className="text-xs text-text-secondary mb-2">Refreshing...</p>
           )}

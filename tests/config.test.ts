@@ -43,4 +43,11 @@ describe('ACTIVITY_GROUPS', () => {
     expect(ACTIVITY_GROUPS.bike.visibility.speed.unit).toBe('km/h')
     expect(ACTIVITY_GROUPS.bike.visibility.pace.show).toBe(false)
   })
+
+  it('hides total distance and elevation for badminton, strength, and other', () => {
+    for (const key of ['badminton', 'strength', 'other']) {
+      expect(ACTIVITY_GROUPS[key].visibility.totalDistance.show).toBe(false)
+      expect(ACTIVITY_GROUPS[key].visibility.totalElevation.show).toBe(false)
+    }
+  })
 })
