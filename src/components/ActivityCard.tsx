@@ -20,7 +20,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
 
     function renderStat(stat: StatVisibility | undefined, condition: boolean, formatted: string) {
         if (!stat || stat.state === 'hide') return null
-        if (stat.state === 'mask') return <Metric label={stat.label} value={'●●●'} />
+        if (stat.state === 'mask') return <Metric label={stat.label} value={`●●● ${stat.unit}`} />
         if (condition) return <Metric label={stat.label} value={formatted} />
         return null
     }

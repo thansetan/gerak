@@ -16,9 +16,9 @@ interface StatsBarProps {
 export function StatsBar({ stats, group }: StatsBarProps) {
   const visibility = ACTIVITY_GROUPS[group]?.visibility
 
-  function statCard(stat: { state: string; label: string } | undefined, formatted: string) {
+  function statCard(stat: { state: string; label: string; unit: string } | undefined, formatted: string) {
     if (!stat || stat.state === 'hide') return null
-    return <StatCard label={stat.label} value={stat.state === 'mask' ? '●●●' : formatted} />
+    return <StatCard label={stat.label} value={stat.state === 'mask' ? `●●● ${stat.unit}` : formatted} />
   }
 
   return (
