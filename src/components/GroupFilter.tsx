@@ -27,7 +27,6 @@ export function GroupFilter({ groups, active, onChange }: GroupFilterProps) {
             ].join(' ')}
           >
             {group.label}
-            {isActive && <span className="ml-1.5">✨</span>}
             <span className="ml-1.5 opacity-70">({group.count})</span>
           </button>
         )

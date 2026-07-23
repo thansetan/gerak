@@ -10,7 +10,9 @@ function defaultVisibility(): StatsVisibility {
         cadence: { state: 'show', label: '🔄 Cadence', unit: 'spm' },
         elevation: { state: 'show', label: '⛰️ Elevation', unit: 'm' },
         totalDistance: { state: 'show', label: '🛣️ Distance', unit: 'km' },
+        totalDuration: { state: 'show', label: '⏱️ Time', unit: 'hrs' },
         totalElevation: { state: 'show', label: '🏔️ Elevation', unit: 'm' },
+        activeDays: { state: 'show', label: '📅 Days', unit: '' },
     };
 }
 

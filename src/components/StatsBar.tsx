@@ -30,9 +30,9 @@ export function StatsBar({ stats, group }: StatsBarProps) {
 
   const cards = [
     { ...CARD_STYLES[0], ...statCard(visibility?.totalDistance, formatDistance(stats.totalDistance)) },
-    { ...CARD_STYLES[1], value: formatDuration(stats.totalDuration) },
+    { ...CARD_STYLES[1], ...statCard(visibility?.totalDuration, formatDuration(stats.totalDuration)) },
     { ...CARD_STYLES[2], ...statCard(visibility?.totalElevation, formatElevation(stats.totalElevation)) },
-    { ...CARD_STYLES[3], value: `${stats.activeDays}` },
+    { ...CARD_STYLES[3], ...statCard(visibility?.activeDays, `${stats.activeDays}`) },
   ]
 
   return (
