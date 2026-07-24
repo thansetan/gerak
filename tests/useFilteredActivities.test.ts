@@ -5,8 +5,8 @@ describe('getGroupForActivity (integration with config)', () => {
   it('all groups contain valid names from getGroupNames', () => {
     const names = getGroupNames()
     const allWithLabels = names.map((n) => ({ name: n, label: getGroupLabel(n) }))
-    expect(allWithLabels.find((g) => g.name === 'run')?.label).toBe('Run')
-    expect(allWithLabels.find((g) => g.name === 'bike')?.label).toBe('Bike')
+    expect(allWithLabels.find((g) => g.name === 'run')?.label).toBe('🏃 Run')
+    expect(allWithLabels.find((g) => g.name === 'bike')?.label).toBe('🚴 Bike')
   })
 })
 
