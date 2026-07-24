@@ -135,41 +135,29 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                         />
                     )}
 
-                    <div className="grid grid-cols-3 gap-0 border-2 border-border">
-                        <HeroStat
-                            label="Duration"
-                            value={formatDurationFull(activity.moving_time)}
-                            color={colors.accent}
-                        />
-                        {hasDistance && (
-                            <HeroStat
-                                label="Distance"
-                                value={formatDistance(activity.distance)}
-                                color={colors.accent}
-                            />
-                        )}
-                        {showPace && (
-                            <HeroStat
-                                label="Pace"
-                                value={formatPace(activity.average_speed)}
-                                color={colors.accent}
-                            />
-                        )}
-                        {showSpeed && (
-                            <HeroStat
-                                label="Speed"
-                                value={formatSpeedKmh(activity.average_speed)}
-                                color={colors.accent}
-                            />
-                        )}
-                        {!hasDistance && !showPace && !showSpeed && (
-                            <HeroStat
-                                label="Active Time"
-                                value={formatDurationFull(activity.moving_time)}
-                                color={colors.accent}
-                            />
-                        )}
-                    </div>
+                    {(() => {
+                        const heroStats: { label: string; value: string }[] = [
+                            { label: 'Duration', value: formatDurationFull(activity.moving_time) },
+                        ]
+                        if (hasDistance) heroStats.push({ label: 'Distance', value: formatDistance(activity.distance) })
+                        if (showPace) heroStats.push({ label: 'Pace', value: formatPace(activity.average_speed) })
+                        if (showSpeed) heroStats.push({ label: 'Speed', value: formatSpeedKmh(activity.average_speed) })
+                        if (heroStats.length === 1) heroStats.push({ label: 'Active Time', value: formatDurationFull(activity.moving_time) })
+
+                        return (
+                            <div className="flex border-2 border-border">
+                                {heroStats.map((s, i) => (
+                                    <div
+                                        key={s.label}
+                                        className={`flex-1 p-3 text-center ${i < heroStats.length - 1 ? 'border-r-2 border-border' : ''}`}
+                                    >
+                                        <p className="font-mono text-lg font-bold text-text tabular-nums" style={{ color: colors.accent }}>{s.value}</p>
+                                        <p className="font-mono text-[10px] text-text-muted uppercase tracking-tight mt-0.5">{s.label}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )
+                    })()}
 
                     {(vis.distance?.state !== 'hide' || vis.avgHeartRate?.state !== 'hide' ||
                       vis.maxHeartRate?.state !== 'hide' || vis.avgPower?.state !== 'hide' ||
@@ -316,15 +304,6 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                     )}
                 </div>
             </div>
-        </div>
-    )
-}
-
-function HeroStat({ label, value, color }: { label: string; value: string; color: string }) {
-    return (
-        <div className="p-3 text-center border-r-2 border-border last:border-r-0">
-            <p className="font-mono text-lg font-bold text-text tabular-nums" style={{ color }}>{value}</p>
-            <p className="font-mono text-[10px] text-text-muted uppercase tracking-tight mt-0.5">{label}</p>
         </div>
     )
 }
