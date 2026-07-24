@@ -1,4 +1,4 @@
-import { ACTIVITY_GROUPS } from '../server/config';
+import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config';
 import { getGroupForActivity } from '../lib/groups';
 import {
     formatCadence,
@@ -28,7 +28,7 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
 
     function renderStat(stat: StatVisibility | undefined, condition: boolean, formatted: string) {
         if (!stat || stat.state === 'hide') return null
-        if (stat.state === 'mask') return <Metric label={stat.label} value={`●●● ${stat.unit}`} />
+        if (stat.state === 'mask') return <Metric label={stat.label} value={`${APP_CONFIG.maskedValue} ${stat.unit}`} />
         if (condition) return <Metric label={stat.label} value={formatted} />
         return null
     }

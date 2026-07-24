@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test'
-import { ACTIVITY_GROUPS } from '../src/server/config'
+import { ACTIVITY_GROUPS, APP_CONFIG } from '../src/server/config'
 import type { VisibilityState } from '../src/server/types'
 
 describe('ACTIVITY_GROUPS', () => {
@@ -49,5 +49,15 @@ describe('ACTIVITY_GROUPS', () => {
       expect(ACTIVITY_GROUPS[key].visibility.totalDistance.state).toBe('hide')
       expect(ACTIVITY_GROUPS[key].visibility.totalElevation.state).toBe('hide')
     }
+  })
+})
+
+describe('APP_CONFIG', () => {
+  it('has a maskedValue string', () => {
+    expect(typeof APP_CONFIG.maskedValue).toBe('string')
+  })
+
+  it('default maskedValue is ●●●', () => {
+    expect(APP_CONFIG.maskedValue).toBe('●●●')
   })
 })

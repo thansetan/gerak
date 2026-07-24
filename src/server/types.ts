@@ -75,6 +75,7 @@ export interface ModalConfig {
 export interface AppConfig {
     cardClick: 'modal' | 'none'
     modal: ModalConfig
+    maskedValue: string
 }
 
 export interface ActivitiesResponse {

@@ -98,6 +98,7 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
 
 export const APP_CONFIG: AppConfig = {
     cardClick: 'modal',
+    maskedValue: '●●●',
     modal: {
         showMinimap: true,
         maxSpeed: { state: 'show', label: '🚀 Max Speed', unit: 'km/h' },

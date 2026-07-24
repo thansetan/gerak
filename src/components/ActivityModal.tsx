@@ -256,14 +256,14 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                     {showDevice && (
                                         <div className="flex items-center gap-2 text-text-secondary">
                                             <span>{modal.device.label}</span>
-                                            <span>{maskedDevice ? '●●●' : activity.device_name}</span>
+                                            <span>{maskedDevice ? APP_CONFIG.maskedValue : activity.device_name}</span>
                                         </div>
                                     )}
                                     <div className="flex flex-wrap gap-3">
                                         {showAchievements && (
                                             <>
-                                                <span className="text-text-secondary">{modal.achievements.label} {maskedAchievements ? '●●●' : (activity.achievement_count ?? 0)}</span>
-                                                <span className="text-text-secondary">👍 {maskedAchievements ? '●●●' : (activity.kudos_count ?? 0)} kudos</span>
+                                                <span className="text-text-secondary">{modal.achievements.label} {maskedAchievements ? APP_CONFIG.maskedValue : (activity.achievement_count ?? 0)}</span>
+                                                <span className="text-text-secondary">👍 {maskedAchievements ? APP_CONFIG.maskedValue : (activity.kudos_count ?? 0)} kudos</span>
                                             </>
                                         )}
 
@@ -308,7 +308,7 @@ function MetricRow({ label, value, visible, masked }: { label: string; value: st
     return (
         <div className="flex items-center justify-between py-1 border-b border-border/50 last:border-0">
             <span className="text-text-secondary text-[13px]">{label}</span>
-            <span className="font-semibold text-text-primary text-[13px]">{masked ? '●●●' : value}</span>
+            <span className="font-semibold text-text-primary text-[13px]">{masked ? APP_CONFIG.maskedValue : value}</span>
         </div>
     )
 }

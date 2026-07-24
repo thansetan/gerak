@@ -1,4 +1,4 @@
-import { ACTIVITY_GROUPS } from '../server/config'
+import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
 import { formatDistance, formatDuration, formatElevation } from '../lib/formatters'
 
 interface AggregateStats {
@@ -25,7 +25,7 @@ export function StatsBar({ stats, group }: StatsBarProps) {
 
   function statCard(stat: { state: string; label: string; unit: string } | undefined, formatted: string) {
     if (!stat || stat.state === 'hide') return null
-    return { label: stat.label, value: stat.state === 'mask' ? `●●● ${stat.unit}` : formatted }
+    return { label: stat.label, value: stat.state === 'mask' ? `${APP_CONFIG.maskedValue} ${stat.unit}` : formatted }
   }
 
   const cards = [
