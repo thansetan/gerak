@@ -73,9 +73,9 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const maskedDevice = modal.device.state === 'mask'
     const showAchievements = modal.achievements.state !== 'hide'
     const maskedAchievements = modal.achievements.state === 'mask'
-    const showGear = modal.gear.state !== 'hide' && gearDetail != null
-    const maskedGear = modal.gear.state === 'mask'
-    const gearDisplayValue = gearDetail ? getGearDisplayValue(gearDetail, modal.gear.value) : '--'
+    const showGear = groupConfig.gearConfig?.state !== 'hide' && gearDetail != null
+    const maskedGear = groupConfig.gearConfig?.state === 'mask'
+    const gearDisplayValue = gearDetail && groupConfig.gearConfig ? getGearDisplayValue(gearDetail, groupConfig.gearConfig.value) : '--'
 
     const previewSportType = activity.sport_type
         .replace(/([A-Z])/g, ' $1').trim().split(' ').slice(0, 2).join(' ')
@@ -277,7 +277,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                 <div className="space-y-2 text-sm">
                                     {showGear && (
                                         <div className="flex items-center gap-2 text-text-secondary">
-                                            <span>{modal.gear.label}</span>
+                                            <span>{groupConfig.gearConfig?.label}</span>
                                             <span>{maskedGear ? APP_CONFIG.maskedValue : gearDisplayValue}</span>
                                         </div>
                                     )}

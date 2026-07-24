@@ -17,83 +17,90 @@ function defaultVisibility(): StatsVisibility {
 }
 
 export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
-    all: {
-        name: 'all',
-        label: '📋 All',
-        sportTypes: null,
-        visibility: defaultVisibility(),
-        cardClick: 'modal',
-    },
-    run: {
-        name: 'run',
-        label: '🏃 Run',
-        sportTypes: ['Run', 'TrailRun', 'VirtualRun'],
-        visibility: defaultVisibility(),
-        cardClick: 'modal',
-    },
-    walk: {
-        name: 'walk',
-        label: '🚶 Walk',
-        sportTypes: ['Walk'],
-        visibility: defaultVisibility(),
-        cardClick: 'modal',
-    },
-    bike: {
-        name: 'bike',
-        label: '🚴 Bike',
-        sportTypes: ['Ride', 'MountainBikeRide', 'GravelRide', 'VirtualRide'],
-        visibility: {
-            ...defaultVisibility(),
-            pace: { state: 'hide', label: 'Avg Pace', unit: '/km' },
-            speed: { state: 'show', label: 'Avg Speed', unit: 'km/h' },
+        all: {
+            name: 'all',
+            label: '📋 All',
+            sportTypes: null,
+            visibility: defaultVisibility(),
+            cardClick: 'modal',
+            gearConfig: { state: 'show', label: '👟 Gear', value: 'brand_model' },
         },
-        cardClick: 'modal',
-    },
-    badminton: {
-        name: 'badminton',
-        label: '🏸 Badminton',
-        sportTypes: ['Badminton'],
-        visibility: {
-            ...defaultVisibility(),
-            totalDistance: {
-                state: 'hide',
-                label: 'Total Distance',
-                unit: 'km',
+        run: {
+            name: 'run',
+            label: '🏃 Run',
+            sportTypes: ['Run', 'TrailRun', 'VirtualRun'],
+            visibility: defaultVisibility(),
+            cardClick: 'modal',
+            gearConfig: { state: 'show', label: '👟 Shoes', value: 'nickname' },
+        },
+        walk: {
+            name: 'walk',
+            label: '🚶 Walk',
+            sportTypes: ['Walk'],
+            visibility: defaultVisibility(),
+            cardClick: 'modal',
+            gearConfig: { state: 'show', label: '👟 Shoes', value: 'brand_model' },
+        },
+        bike: {
+            name: 'bike',
+            label: '🚴 Bike',
+            sportTypes: ['Ride', 'MountainBikeRide', 'GravelRide', 'VirtualRide'],
+            visibility: {
+                ...defaultVisibility(),
+                pace: { state: 'hide', label: 'Avg Pace', unit: '/km' },
+                speed: { state: 'show', label: 'Avg Speed', unit: 'km/h' },
             },
-            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
+            cardClick: 'modal',
+            gearConfig: { state: 'show', label: '🚴 Bike', value: 'full_name' },
         },
-        cardClick: 'modal',
-    },
-    strength: {
-        name: 'strength',
-        label: '💪 Strength',
-        sportTypes: ['Strength', 'WeightTraining'],
-        visibility: {
-            ...defaultVisibility(),
-            totalDistance: {
-                state: 'hide',
-                label: 'Total Distance',
-                unit: 'km',
+        badminton: {
+            name: 'badminton',
+            label: '🏸 Badminton',
+            sportTypes: ['Badminton'],
+            visibility: {
+                ...defaultVisibility(),
+                totalDistance: {
+                    state: 'hide',
+                    label: 'Total Distance',
+                    unit: 'km',
+                },
+                totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
             },
-            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
+            cardClick: 'modal',
+            gearConfig: { state: 'show', label: '👟 Shoes', value: 'brand_model' },
         },
-        cardClick: 'modal',
-    },
-    other: {
-        name: 'other',
-        label: '🎯 Other',
-        sportTypes: [],
-        visibility: {
-            ...defaultVisibility(),
-            totalDistance: {
-                state: 'hide',
-                label: 'Total Distance',
-                unit: 'km',
+        strength: {
+            name: 'strength',
+            label: '💪 Strength',
+            sportTypes: ['Strength', 'WeightTraining'],
+            visibility: {
+                ...defaultVisibility(),
+                totalDistance: {
+                    state: 'hide',
+                    label: 'Total Distance',
+                    unit: 'km',
+                },
+                totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
             },
-            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
+            cardClick: 'modal',
+            gearConfig: { state: 'show', label: '👟 Shoes', value: 'brand_model' },
         },
-        cardClick: 'modal',
-    },
+        other: {
+            name: 'other',
+            label: '🎯 Other',
+            sportTypes: [],
+            visibility: {
+                ...defaultVisibility(),
+                totalDistance: {
+                    state: 'hide',
+                    label: 'Total Distance',
+                    unit: 'km',
+                },
+                totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
+            },
+            cardClick: 'modal',
+            gearConfig: { state: 'show', label: '👟 Gear', value: 'brand_model' },
+        },
 };
 
 export const APP_CONFIG: AppConfig = {
@@ -112,7 +119,6 @@ export const APP_CONFIG: AppConfig = {
         commute: { state: 'show', label: '🚗 Commute', unit: '' },
         trainer: { state: 'show', label: '🏋️ Indoor', unit: '' },
         manual: { state: 'show', label: '✏️ Manual', unit: '' },
-        gear: { state: 'show', label: '👟 Gear', value: 'nickname' },
     },
 };
 

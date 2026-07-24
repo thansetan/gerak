@@ -56,6 +56,7 @@ export interface ActivityGroup {
     sportTypes: string[] | null
     visibility: StatsVisibility
     cardClick: 'modal' | 'none'
+    gearConfig?: GearConfig
 }
 
 export interface ModalConfig {
@@ -71,7 +72,6 @@ export interface ModalConfig {
     commute: StatVisibility
     trainer: StatVisibility
     manual: StatVisibility
-    gear: GearConfig
 }
 
 export type GearValueDisplay = 'brand_model' | 'nickname' | 'full_name'

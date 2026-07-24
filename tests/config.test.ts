@@ -122,15 +122,28 @@ describe('APP_CONFIG', () => {
     expect(APP_CONFIG.modal.elevRange.unit).toBe('m')
   })
 
-  it('gear config exists with state, label, and value', () => {
-    const { gear } = APP_CONFIG.modal
-    expect(gear).toBeDefined()
-    expect(typeof gear.state).toBe('string')
-    expect(typeof gear.label).toBe('string')
-    expect(typeof gear.value).toBe('string')
+  it('gear config exists on each group with state, label, and value', () => {
+    for (const group of Object.values(ACTIVITY_GROUPS)) {
+      const gc = group.gearConfig
+      expect(gc).toBeDefined()
+      expect(typeof gc!.state).toBe('string')
+      expect(typeof gc!.label).toBe('string')
+      expect(typeof gc!.value).toBe('string')
+    }
   })
 
-  it('gear defaults to show state', () => {
-    expect(APP_CONFIG.modal.gear.state).toBe('show')
+  it('gear defaults to show state on all groups', () => {
+    for (const group of Object.values(ACTIVITY_GROUPS)) {
+      expect(group.gearConfig?.state).toBe('show')
+    }
+  })
+
+  it('run group uses nickname gear value', () => {
+    expect(ACTIVITY_GROUPS.run.gearConfig?.value).toBe('nickname')
+  })
+
+  it('bike group uses full_name gear value', () => {
+    expect(ACTIVITY_GROUPS.bike.gearConfig?.value).toBe('full_name')
+    expect(ACTIVITY_GROUPS.bike.gearConfig?.label).toBe('🚴 Bike')
   })
 })
