@@ -13,13 +13,6 @@ interface StatsBarProps {
   group: string
 }
 
-const CARD_STYLES = [
-  { emoji: '🛣️', title: 'Total Distance', bg: 'bg-stat-distance-bg', text: 'text-stat-distance' },
-  { emoji: '⏱️', title: 'Total Time', bg: 'bg-stat-time-bg', text: 'text-stat-time' },
-  { emoji: '🏔️', title: 'Elevation', bg: 'bg-stat-elevation-bg', text: 'text-stat-elevation' },
-  { emoji: '📅', title: 'Active Days', bg: 'bg-stat-days-bg', text: 'text-stat-days' },
-]
-
 export function StatsBar({ stats, group }: StatsBarProps) {
   const visibility = ACTIVITY_GROUPS[group]?.visibility
 
@@ -29,20 +22,21 @@ export function StatsBar({ stats, group }: StatsBarProps) {
   }
 
   const cards = [
-    { ...CARD_STYLES[0], ...statCard(visibility?.totalDistance, formatDistance(stats.totalDistance)) },
-    { ...CARD_STYLES[1], ...statCard(visibility?.totalDuration, formatDuration(stats.totalDuration)) },
-    { ...CARD_STYLES[2], ...statCard(visibility?.totalElevation, formatElevation(stats.totalElevation)) },
-    { ...CARD_STYLES[3], ...statCard(visibility?.activeDays, `${stats.activeDays}`) },
-  ]
+    statCard(visibility?.totalDistance, formatDistance(stats.totalDistance)),
+    statCard(visibility?.totalDuration, formatDuration(stats.totalDuration)),
+    statCard(visibility?.totalElevation, formatElevation(stats.totalElevation)),
+    statCard(visibility?.activeDays, `${stats.activeDays}`),
+  ].filter(c => c != null)
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-      {cards.filter(c => c.value != null).map((card) => (
-        <div key={card.title} className={`rounded-xl ${card.bg} p-4 transition-all duration-300 hover:scale-[1.03] hover:shadow-md`}>
-          <p className="text-xs text-text-secondary uppercase tracking-wide">
-            <span className="mr-1">{card.emoji}</span>{card.title}
-          </p>
-          <p className={`text-lg font-bold mt-1 ${card.text}`}>{card.value}</p>
+    <div className="grid grid-cols-2 sm:grid-cols-4 border-2 border-border mb-6">
+      {cards.map((card, i) => (
+        <div
+          key={card!.label}
+          className={`p-3 border-border ${i < cards.length - 1 ? 'border-r-2' : ''} sm:border-r-2 last:sm:border-r-0`}
+        >
+          <p className="font-mono text-xs text-text-muted uppercase tracking-tight">{card!.label}</p>
+          <p className="font-mono text-xl font-bold text-text mt-0.5 tracking-tight">{card!.value}</p>
         </div>
       ))}
     </div>

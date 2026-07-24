@@ -9,24 +9,26 @@ interface ActivityListProps {
 export function ActivityList({ activities, onCardClick }: ActivityListProps) {
   if (activities.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-4xl mb-3">🔍</p>
-        <p className="text-lg font-medium text-text-primary">No activities found</p>
-        <p className="text-sm text-text-secondary mt-1">
-          Try selecting a different filter group.
-        </p>
+      <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-border">
+        <p className="font-mono text-sm font-medium text-text uppercase tracking-tight">No activities found</p>
+        <p className="font-mono text-xs text-text-muted mt-2">Try selecting a different filter.</p>
       </div>
     )
   }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {activities.map((activity) => (
-        <ActivityCard
+      {activities.map((activity, i) => (
+        <div
           key={activity.id}
-          activity={activity}
-          onClick={onCardClick ? () => onCardClick(activity) : undefined}
-        />
+          className="animate-slide-up"
+          style={{ animationDelay: `${Math.min(i * 30, 600)}ms` }}
+        >
+          <ActivityCard
+            activity={activity}
+            onClick={onCardClick ? () => onCardClick(activity) : undefined}
+          />
+        </div>
       ))}
     </div>
   )
