@@ -29,11 +29,11 @@ export function StatsBar({ stats, group }: StatsBarProps) {
   ].filter(c => c != null)
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 border-2 border-border mb-6">
+    <div className="flex flex-wrap mb-6">
       {cards.map((card, i) => (
         <div
           key={card!.label}
-          className={`p-3 border-border ${i < cards.length - 1 ? 'border-r-2' : ''} sm:border-r-2 last:sm:border-r-0`}
+          className="flex-1 min-w-[130px] border-2 border-border p-3"
         >
           <p className="font-mono text-xs text-text-muted uppercase tracking-tight">{card!.label}</p>
           <p className="font-mono text-xl font-bold text-text mt-0.5 tracking-tight">{card!.value}</p>
