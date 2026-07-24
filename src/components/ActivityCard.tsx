@@ -49,8 +49,8 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
                         </p>
                     </div>
                     <span
-                      className="font-mono text-[10px] font-medium uppercase tracking-tight px-1.5 py-0.5 shrink-0"
-                      style={{ backgroundColor: color.bg, color: color.accent }}
+                      className="font-mono text-[11px] font-bold uppercase tracking-tight px-2 py-0.5 shrink-0 text-white"
+                      style={{ backgroundColor: color.accent }}
                     >
                         {groupConfig.label}
                     </span>

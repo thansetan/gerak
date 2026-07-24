@@ -111,8 +111,8 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-3">
                         <span
-                          className="font-mono text-[10px] font-medium uppercase tracking-tight px-1.5 py-0.5"
-                          style={{ backgroundColor: colors.bg, color: colors.accent }}
+                          className="font-mono text-[11px] font-bold uppercase tracking-tight px-2 py-0.5 text-white"
+                          style={{ backgroundColor: colors.accent }}
                         >
                             {groupConfig.label}
                         </span>
