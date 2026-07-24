@@ -29,7 +29,7 @@ export function Header({ syncedAt, athleteName, profileUrl, activitiesCount }: H
           <img
             src={profileUrl}
             alt={athleteName ?? 'Profile'}
-            className="w-8 h-8 border-2 border-border object-cover"
+            className="w-12 h-12 border-2 border-border object-cover"
             style={{ borderRadius: 0 }}
           />
         )}

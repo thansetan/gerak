@@ -21,7 +21,7 @@ export function ActivityList({ activities, onCardClick }: ActivityListProps) {
       {activities.map((activity, i) => (
         <div
           key={activity.id}
-          className="animate-slide-up"
+          className="animate-slide-up h-full"
           style={{ animationDelay: `${Math.min(i * 30, 600)}ms` }}
         >
           <ActivityCard

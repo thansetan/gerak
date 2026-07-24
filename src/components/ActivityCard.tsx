@@ -32,13 +32,13 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
     return (
         <div
             onClick={onClick}
-            className={`border-2 border-border bg-surface group ${onClick ? 'cursor-pointer lg:hover:border-text transition-colors duration-150' : ''}`}
+            className={`border-2 border-border bg-surface group h-full flex flex-col ${onClick ? 'cursor-pointer lg:hover:border-text transition-colors duration-150' : ''}`}
         >
             <div
               className="h-1 w-full"
               style={{ backgroundColor: color.accent }}
             />
-            <div className="p-4">
+            <div className="p-4 flex-1">
                 <div className="flex items-start justify-between gap-2 mb-3">
                     <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-text text-sm leading-snug line-clamp-1">

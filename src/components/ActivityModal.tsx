@@ -101,6 +101,13 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                         <p className="font-mono text-xs text-text-muted mt-0.5 uppercase tracking-tight">
                             {new Date(activity.start_date).toLocaleString()}
                         </p>
+                        {showAchievements && (
+                            <p className="font-mono text-xs text-text-muted mt-1">
+                                {maskedAchievements ? APP_CONFIG.maskedValue : (activity.achievement_count ?? 0)} achievements
+                                <span className="mx-1.5">&middot;</span>
+                                {maskedAchievements ? APP_CONFIG.maskedValue : (activity.kudos_count ?? 0)} kudos
+                            </p>
+                        )}
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-3">
                         <span
@@ -270,7 +277,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                         </>
                     )}
 
-                    {(showDevice || showAchievements || showGear || (modal.private.state !== 'hide' && activity.private) || (modal.commute.state !== 'hide' && activity.commute) || (modal.trainer.state !== 'hide' && activity.trainer) || (modal.manual.state !== 'hide' && activity.manual)) && (
+                    {(showDevice || showGear || (modal.private.state !== 'hide' && activity.private) || (modal.commute.state !== 'hide' && activity.commute) || (modal.trainer.state !== 'hide' && activity.trainer) || (modal.manual.state !== 'hide' && activity.manual)) && (
                         <>
                             <div className="border-t-2 border-border pt-4">
                                 <h3 className="font-mono text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
@@ -289,14 +296,6 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                             <span>{maskedDevice ? APP_CONFIG.maskedValue : activity.device_name}</span>
                                         </div>
                                     )}
-                                    <div className="flex flex-wrap gap-3">
-                                        {showAchievements && (
-                                            <>
-                                                <span className="font-mono text-xs text-text-muted">{modal.achievements.label} {maskedAchievements ? APP_CONFIG.maskedValue : (activity.achievement_count ?? 0)}</span>
-                                                <span className="font-mono text-xs text-text-muted">{maskedAchievements ? APP_CONFIG.maskedValue : (activity.kudos_count ?? 0)} kudos</span>
-                                            </>
-                                        )}
-                                    </div>
                                     <div className="flex flex-wrap gap-2">
                                         {modal.private.state !== 'hide' && activity.private && (
                                             <span className="font-mono text-[10px] uppercase tracking-tight border-2 border-border px-2 py-0.5 text-text-muted">{modal.private.label}</span>
@@ -333,7 +332,7 @@ function HeroStat({ label, value, color }: { label: string; value: string; color
 function MetricRow({ label, value, visible, masked, unit }: { label: string; value: string; visible: boolean; masked?: boolean; unit?: string }) {
     if (!visible) return null
     return (
-        <div className="flex items-center justify-between py-1 border-b-2 border-border last:border-b-0">
+        <div className="flex items-center justify-between py-1">
             <span className="font-mono text-[11px] text-text-muted uppercase tracking-tight">{label}</span>
             <span className="font-mono text-xs font-medium text-text tabular-nums">{masked ? formatMaskedValue(APP_CONFIG.maskedValue, unit) : value}</span>
         </div>
