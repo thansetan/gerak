@@ -112,6 +112,7 @@ export const APP_CONFIG: AppConfig = {
         commute: { state: 'show', label: '🚗 Commute', unit: '' },
         trainer: { state: 'show', label: '🏋️ Indoor', unit: '' },
         manual: { state: 'show', label: '✏️ Manual', unit: '' },
+        gear: { state: 'show', label: '👟 Gear', value: 'nickname' },
     },
 };
 

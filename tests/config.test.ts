@@ -121,4 +121,16 @@ describe('APP_CONFIG', () => {
   it('elevRange has m unit', () => {
     expect(APP_CONFIG.modal.elevRange.unit).toBe('m')
   })
+
+  it('gear config exists with state, label, and value', () => {
+    const { gear } = APP_CONFIG.modal
+    expect(gear).toBeDefined()
+    expect(typeof gear.state).toBe('string')
+    expect(typeof gear.label).toBe('string')
+    expect(typeof gear.value).toBe('string')
+  })
+
+  it('gear defaults to show state', () => {
+    expect(APP_CONFIG.modal.gear.state).toBe('show')
+  })
 })

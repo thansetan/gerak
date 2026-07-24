@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { getActivities } from '../server/activities'
 import { getAthlete } from '../server/athlete'
+import { getGear } from '../server/gear'
 import { ACTIVITY_GROUPS } from '../server/config'
 import { Header } from '../components/Header'
 import { GroupFilter } from '../components/GroupFilter'
@@ -33,6 +34,10 @@ export const Route = createFileRoute('/')({
       queryClient.ensureQueryData({
         queryKey: ['athlete'],
         queryFn: () => getAthlete(),
+      }),
+      queryClient.ensureQueryData({
+        queryKey: ['gear'],
+        queryFn: () => getGear(),
       }),
     ])
   },

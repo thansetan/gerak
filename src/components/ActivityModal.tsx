@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
+import { getGear } from '../server/gear'
 import { getGroupForActivity } from '../lib/groups'
 import { Minimap } from './Minimap'
 import { SPORT_COLORS, SPORT_EMOJIS } from '../lib/colors'
@@ -15,6 +17,7 @@ import {
     formatPace,
     formatSpeed,
     formatSpeedKmh,
+    getGearDisplayValue,
 } from '../lib/formatters'
 
 interface ActivityModalProps {
@@ -27,6 +30,8 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const groupConfig = ACTIVITY_GROUPS[group]
     const modal = APP_CONFIG.modal
     const vis = groupConfig.visibility
+    const { data: gearMap } = useQuery({ queryKey: ['gear'], queryFn: () => getGear(), staleTime: Infinity })
+    const gearDetail = gearMap?.[activity.gear_id ?? '']
     const emoji = SPORT_EMOJIS[group] ?? '🎯'
     const colors = SPORT_COLORS[group] ?? SPORT_COLORS.other
 
@@ -68,6 +73,9 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const maskedDevice = modal.device.state === 'mask'
     const showAchievements = modal.achievements.state !== 'hide'
     const maskedAchievements = modal.achievements.state === 'mask'
+    const showGear = modal.gear.state !== 'hide' && gearDetail != null
+    const maskedGear = modal.gear.state === 'mask'
+    const gearDisplayValue = gearDetail ? getGearDisplayValue(gearDetail, modal.gear.value) : '--'
 
     const previewSportType = activity.sport_type
         .replace(/([A-Z])/g, ' $1').trim().split(' ').slice(0, 2).join(' ')
@@ -260,13 +268,19 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                         </>
                     )}
 
-                    {(showDevice || showAchievements || (modal.private.state !== 'hide' && activity.private) || (modal.commute.state !== 'hide' && activity.commute) || (modal.trainer.state !== 'hide' && activity.trainer) || (modal.manual.state !== 'hide' && activity.manual)) && (
+                    {(showDevice || showAchievements || showGear || (modal.private.state !== 'hide' && activity.private) || (modal.commute.state !== 'hide' && activity.commute) || (modal.trainer.state !== 'hide' && activity.trainer) || (modal.manual.state !== 'hide' && activity.manual)) && (
                         <>
                             <div className="border-t border-border pt-4">
                                 <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-3">
                                     ℹ️ Details
                                 </h3>
                                 <div className="space-y-2 text-sm">
+                                    {showGear && (
+                                        <div className="flex items-center gap-2 text-text-secondary">
+                                            <span>{modal.gear.label}</span>
+                                            <span>{maskedGear ? APP_CONFIG.maskedValue : gearDisplayValue}</span>
+                                        </div>
+                                    )}
                                     {showDevice && (
                                         <div className="flex items-center gap-2 text-text-secondary">
                                             <span>{modal.device.label}</span>

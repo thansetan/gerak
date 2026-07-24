@@ -8,6 +8,7 @@ import {
   formatCadence,
   formatElevation,
   formatMaskedValue,
+  getGearDisplayValue,
 } from '../src/lib/formatters'
 
 describe('formatDistance', () => {
@@ -112,5 +113,45 @@ describe('formatMaskedValue', () => {
   it('works with different masked values and units', () => {
     expect(formatMaskedValue('***', 'm')).toBe('*** m')
     expect(formatMaskedValue('???', 'km/h')).toBe('??? km/h')
+  })
+})
+
+describe('getGearDisplayValue', () => {
+  const gear = {
+    id: 'g123',
+    name: 'ASICS Novablast 5 Asep Novian Buwono',
+    nickname: 'Asep Novian Buwono',
+    brand_name: 'ASICS',
+    model_name: 'Novablast 5',
+    primary: false,
+    retired: false,
+    distance: 711165,
+  }
+
+  it('brand_model joins brand_name and model_name', () => {
+    expect(getGearDisplayValue(gear, 'brand_model')).toBe('ASICS Novablast 5')
+  })
+
+  it('nickname returns nickname property', () => {
+    expect(getGearDisplayValue(gear, 'nickname')).toBe('Asep Novian Buwono')
+  })
+
+  it('full_name returns name property', () => {
+    expect(getGearDisplayValue(gear, 'full_name')).toBe('ASICS Novablast 5 Asep Novian Buwono')
+  })
+
+  it('brand_model handles missing brand_name', () => {
+    const g = { ...gear, brand_name: undefined }
+    expect(getGearDisplayValue(g, 'brand_model')).toBe('Novablast 5')
+  })
+
+  it('brand_model handles missing model_name', () => {
+    const g = { ...gear, model_name: undefined }
+    expect(getGearDisplayValue(g, 'brand_model')).toBe('ASICS')
+  })
+
+  it('nickname falls back to -- when missing', () => {
+    const g = { ...gear, nickname: undefined }
+    expect(getGearDisplayValue(g, 'nickname')).toBe('--')
   })
 })

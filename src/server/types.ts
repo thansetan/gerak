@@ -28,6 +28,7 @@ export interface StravaActivity {
     start_latlng?: [number, number]
     end_latlng?: [number, number]
     average_cadence?: number
+    gear_id?: string
     private: boolean
     commute: boolean
     manual: boolean
@@ -70,6 +71,26 @@ export interface ModalConfig {
     commute: StatVisibility
     trainer: StatVisibility
     manual: StatVisibility
+    gear: GearConfig
+}
+
+export type GearValueDisplay = 'brand_model' | 'nickname' | 'full_name'
+
+export interface GearDetail {
+    id: string
+    name: string
+    nickname?: string
+    brand_name?: string
+    model_name?: string
+    primary: boolean
+    retired: boolean
+    distance: number
+}
+
+export interface GearConfig {
+    state: VisibilityState
+    label: string
+    value: GearValueDisplay
 }
 
 export interface AppConfig {

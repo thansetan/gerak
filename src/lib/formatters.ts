@@ -65,3 +65,14 @@ export function formatNumber(val: number, suffix = ''): string {
 export function formatMaskedValue(maskedValue: string, unit?: string): string {
   return unit ? `${maskedValue} ${unit}` : maskedValue
 }
+
+export function getGearDisplayValue(gear: { name: string; nickname?: string; brand_name?: string; model_name?: string }, mode: 'brand_model' | 'nickname' | 'full_name'): string {
+  switch (mode) {
+    case 'brand_model':
+      return [gear.brand_name, gear.model_name].filter(Boolean).join(' ')
+    case 'nickname':
+      return gear.nickname ?? '--'
+    case 'full_name':
+      return gear.name
+  }
+}
