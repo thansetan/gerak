@@ -59,13 +59,17 @@ export interface ActivityGroup {
 
 export interface ModalConfig {
     showMinimap: boolean
-    maxSpeed: VisibilityState
-    maxPower: VisibilityState
-    weightedPower: VisibilityState
-    calories: VisibilityState
-    elevRange: VisibilityState
-    device: VisibilityState
-    achievements: VisibilityState
+    maxSpeed: StatVisibility
+    maxPower: StatVisibility
+    weightedPower: StatVisibility
+    calories: StatVisibility
+    elevRange: StatVisibility
+    device: StatVisibility
+    achievements: StatVisibility
+    private: StatVisibility
+    commute: StatVisibility
+    trainer: StatVisibility
+    manual: StatVisibility
 }
 
 export interface AppConfig {

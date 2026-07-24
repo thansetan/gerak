@@ -53,13 +53,20 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const showPace = vis.pace?.state !== 'hide' && activity.average_speed > 0
     const showSpeed = vis.speed?.state === 'show' && activity.average_speed > 0
 
-    const showElevRange = modal.elevRange === 'show' && activity.elev_high != null && group !== 'badminton'
-    const showMaxSpeed = modal.maxSpeed === 'show' && activity.max_speed > 0
-    const showMaxPower = modal.maxPower === 'show' && activity.max_watts != null
-    const showWeightedPower = modal.weightedPower === 'show' && activity.weighted_average_watts != null
-    const showCalories = modal.calories === 'show' && (activity.kilojoules != null && activity.kilojoules > 0)
-    const showDevice = modal.device === 'show' && activity.device_name
-    const showAchievements = modal.achievements === 'show'
+    const showElevRange = modal.elevRange.state !== 'hide' && activity.elev_high != null && group !== 'badminton'
+    const maskedElevRange = modal.elevRange.state === 'mask'
+    const showMaxSpeed = modal.maxSpeed.state !== 'hide' && activity.max_speed > 0
+    const maskedMaxSpeed = modal.maxSpeed.state === 'mask'
+    const showMaxPower = modal.maxPower.state !== 'hide' && activity.max_watts != null
+    const maskedMaxPower = modal.maxPower.state === 'mask'
+    const showWeightedPower = modal.weightedPower.state !== 'hide' && activity.weighted_average_watts != null
+    const maskedWeightedPower = modal.weightedPower.state === 'mask'
+    const showCalories = modal.calories.state !== 'hide' && (activity.kilojoules != null && activity.kilojoules > 0)
+    const maskedCalories = modal.calories.state === 'mask'
+    const showDevice = modal.device.state !== 'hide' && activity.device_name
+    const maskedDevice = modal.device.state === 'mask'
+    const showAchievements = modal.achievements.state !== 'hide'
+    const maskedAchievements = modal.achievements.state === 'mask'
 
     const previewSportType = activity.sport_type
         .replace(/([A-Z])/g, ' $1').trim().split(' ').slice(0, 2).join(' ')
@@ -163,13 +170,13 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                         masked={vis.distance?.state === 'mask'}
                                     />
                                     <MetricRow
-                                        label={'💓 Avg HR'}
+                                        label={vis.avgHeartRate?.label ?? '💓 Avg HR'}
                                         value={formatHeartRate(activity.average_heartrate)}
                                         visible={vis.avgHeartRate?.state !== 'hide' && !!activity.average_heartrate}
                                         masked={vis.avgHeartRate?.state === 'mask'}
                                     />
                                     <MetricRow
-                                        label={'💗 Max HR'}
+                                        label={vis.maxHeartRate?.label ?? '💗 Max HR'}
                                         value={formatHeartRate(activity.max_heartrate)}
                                         visible={vis.maxHeartRate?.state !== 'hide' && !!activity.max_heartrate}
                                         masked={vis.maxHeartRate?.state === 'mask'}
@@ -187,54 +194,59 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                         masked={vis.speed?.state === 'mask'}
                                     />
                                     <MetricRow
-                                        label={'⚡ Avg Power'}
+                                        label={vis.avgPower?.label ?? '⚡ Avg Power'}
                                         value={activity.average_watts ? `${Math.round(activity.average_watts)} W` : '--'}
                                         visible={vis.avgPower?.state !== 'hide' && !!activity.average_watts}
                                         masked={vis.avgPower?.state === 'mask'}
                                     />
                                     <MetricRow
-                                        label={'🔄 Cadence'}
+                                        label={vis.cadence?.label ?? '🔄 Cadence'}
                                         value={formatCadence(activity.average_cadence ? activity.average_cadence * 2 : undefined)}
                                         visible={vis.cadence?.state !== 'hide' && !!activity.average_cadence}
                                         masked={vis.cadence?.state === 'mask'}
                                     />
                                     <MetricRow
-                                        label={'⛰️ Elevation'}
+                                        label={vis.elevation?.label ?? '⛰️ Elevation'}
                                         value={formatElevation(activity.total_elevation_gain)}
                                         visible={vis.elevation?.state !== 'hide' && activity.total_elevation_gain > 0}
                                         masked={vis.elevation?.state === 'mask'}
                                     />
                                     <MetricRow
-                                        label="🚀 Max Speed"
+                                        label={modal.maxSpeed.label}
                                         value={`${(activity.max_speed * 3.6).toFixed(1)} km/h`}
                                         visible={showMaxSpeed}
+                                        masked={maskedMaxSpeed}
                                     />
                                     <MetricRow
-                                        label="⚡ Max Power"
+                                        label={modal.maxPower.label}
                                         value={`${Math.round(activity.max_watts!)} W`}
                                         visible={showMaxPower}
+                                        masked={maskedMaxPower}
                                     />
                                     <MetricRow
-                                        label="⚡ Weighted Power"
+                                        label={modal.weightedPower.label}
                                         value={`${Math.round(activity.weighted_average_watts!)} W`}
                                         visible={showWeightedPower}
+                                        masked={maskedWeightedPower}
                                     />
                                     <MetricRow
-                                        label="🔥 Calories"
+                                        label={modal.calories.label}
                                         value={formatKilojoules(activity.kilojoules) ?? '--'}
                                         visible={showCalories}
+                                        masked={maskedCalories}
                                     />
                                     <MetricRow
-                                        label="📈 Elev Range"
+                                        label={modal.elevRange.label}
                                         value={`${formatElevation(activity.elev_low!)} – ${formatElevation(activity.elev_high!)}`}
                                         visible={showElevRange}
+                                        masked={maskedElevRange}
                                     />
                                 </div>
                             </div>
                         </>
                     )}
 
-                    {(showDevice || showAchievements || activity.private || activity.commute || activity.trainer || activity.manual) && (
+                    {(showDevice || showAchievements || (modal.private.state !== 'hide' && activity.private) || (modal.commute.state !== 'hide' && activity.commute) || (modal.trainer.state !== 'hide' && activity.trainer) || (modal.manual.state !== 'hide' && activity.manual)) && (
                         <>
                             <div className="border-t border-border pt-4">
                                 <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-3">
@@ -243,31 +255,31 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                 <div className="space-y-2 text-sm">
                                     {showDevice && (
                                         <div className="flex items-center gap-2 text-text-secondary">
-                                            <span>📱</span>
-                                            <span>{activity.device_name}</span>
+                                            <span>{modal.device.label}</span>
+                                            <span>{maskedDevice ? '●●●' : activity.device_name}</span>
                                         </div>
                                     )}
                                     <div className="flex flex-wrap gap-3">
                                         {showAchievements && (
                                             <>
-                                                <span className="text-text-secondary">🏆 {activity.achievement_count ?? 0} achievements</span>
-                                                <span className="text-text-secondary">👍 {activity.kudos_count ?? 0} kudos</span>
+                                                <span className="text-text-secondary">{modal.achievements.label} {maskedAchievements ? '●●●' : (activity.achievement_count ?? 0)}</span>
+                                                <span className="text-text-secondary">👍 {maskedAchievements ? '●●●' : (activity.kudos_count ?? 0)} kudos</span>
                                             </>
                                         )}
 
                                     </div>
                                     <div className="flex flex-wrap gap-2">
-                                        {activity.private && (
-                                            <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">🔒 Private</span>
+                                        {modal.private.state !== 'hide' && activity.private && (
+                                            <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">{modal.private.label}</span>
                                         )}
-                                        {activity.commute && (
-                                            <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">🚗 Commute</span>
+                                        {modal.commute.state !== 'hide' && activity.commute && (
+                                            <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">{modal.commute.label}</span>
                                         )}
-                                        {activity.trainer && (
-                                            <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">🏋️ Indoor</span>
+                                        {modal.trainer.state !== 'hide' && activity.trainer && (
+                                            <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">{modal.trainer.label}</span>
                                         )}
-                                        {activity.manual && (
-                                            <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">✏️ Manual</span>
+                                        {modal.manual.state !== 'hide' && activity.manual && (
+                                            <span className="rounded-md bg-surface-secondary px-2 py-0.5 text-xs text-text-secondary">{modal.manual.label}</span>
                                         )}
                                     </div>
 
