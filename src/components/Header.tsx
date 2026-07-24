@@ -12,12 +12,13 @@ export function Header({ syncedAt, athleteName, profileUrl, activitiesCount }: H
     <header className="flex items-center justify-between border-b-2 border-border pb-4 mb-8">
       <div>
         <h1 className="text-2xl font-bold tracking-tighter text-text font-mono">
-          BERGERAK
+          berGERAK
         </h1>
-        <p className="text-xs text-text-muted mt-1 tracking-tight uppercase">
-          {athleteName ?? 'Athlete'}
-          {activitiesCount != null && <span> &mdash; {activitiesCount} activities</span>}
-        </p>
+        {activitiesCount != null && (
+          <p className="text-xs text-text-muted mt-1">
+            {athleteName ? `${athleteName}'s ` : ''}latest {activitiesCount} perGERAKan
+          </p>
+        )}
         {syncedAt && (
           <p className="text-xs text-text-muted mt-0.5">
             Synced {new Date(syncedAt).toLocaleString()}
