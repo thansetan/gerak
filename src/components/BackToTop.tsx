@@ -10,7 +10,7 @@ export function BackToTop() {
   }, [])
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+    window.scrollTo({ top: 0, behavior: 'smooth' as ScrollBehavior })
   }
 
   return (
