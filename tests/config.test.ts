@@ -60,4 +60,65 @@ describe('APP_CONFIG', () => {
   it('default maskedValue is ●●●', () => {
     expect(APP_CONFIG.maskedValue).toBe('●●●')
   })
+
+  it('modal has all StatVisibility fields as objects', () => {
+    const { modal } = APP_CONFIG
+    const statFields = ['maxSpeed', 'maxPower', 'weightedPower', 'calories', 'elevRange', 'device', 'achievements'] as const
+    for (const field of statFields) {
+      expect(typeof modal[field]).toBe('object')
+      expect(modal[field]).toHaveProperty('state')
+      expect(modal[field]).toHaveProperty('label')
+      expect(modal[field]).toHaveProperty('unit')
+    }
+  })
+
+  it('modal is a boolean', () => {
+    expect(typeof APP_CONFIG.modal.showMinimap).toBe('boolean')
+  })
+
+  it('modal has activity flag fields', () => {
+    const { modal } = APP_CONFIG
+    const flagFields = ['private', 'commute', 'trainer', 'manual'] as const
+    for (const field of flagFields) {
+      expect(modal[field]).toBeDefined()
+      expect(typeof modal[field].state).toBe('string')
+      expect(typeof modal[field].label).toBe('string')
+    }
+  })
+
+  it('modal flag fields allow show/hide only for mask', () => {
+    const { modal } = APP_CONFIG
+    const flagFields = ['private', 'commute', 'trainer', 'manual'] as const
+    for (const field of flagFields) {
+      expect(modal[field].state).toMatch(/^(show|hide)$/)
+    }
+  })
+
+  it('modal metric fields default to show, calories defaults to hide', () => {
+    const { modal } = APP_CONFIG
+    expect(modal.maxSpeed.state).toBe('show')
+    expect(modal.maxPower.state).toBe('show')
+    expect(modal.weightedPower.state).toBe('show')
+    expect(modal.calories.state).toBe('hide')
+    expect(modal.elevRange.state).toBe('show')
+    expect(modal.device.state).toBe('show')
+    expect(modal.achievements.state).toBe('show')
+  })
+
+  it('maxSpeed has km/h unit', () => {
+    expect(APP_CONFIG.modal.maxSpeed.unit).toBe('km/h')
+  })
+
+  it('maxPower and weightedPower have W unit', () => {
+    expect(APP_CONFIG.modal.maxPower.unit).toBe('W')
+    expect(APP_CONFIG.modal.weightedPower.unit).toBe('W')
+  })
+
+  it('calories has kJ unit', () => {
+    expect(APP_CONFIG.modal.calories.unit).toBe('kJ')
+  })
+
+  it('elevRange has m unit', () => {
+    expect(APP_CONFIG.modal.elevRange.unit).toBe('m')
+  })
 })

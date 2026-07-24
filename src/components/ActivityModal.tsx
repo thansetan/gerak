@@ -11,6 +11,7 @@ import {
     formatElevation,
     formatHeartRate,
     formatKilojoules,
+    formatMaskedValue,
     formatPace,
     formatSpeed,
     formatSpeedKmh,
@@ -168,78 +169,91 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                         value={formatDistance(activity.distance)}
                                         visible={vis.distance?.state !== 'hide' && hasDistance}
                                         masked={vis.distance?.state === 'mask'}
+                                        unit={vis.distance?.unit}
                                     />
                                     <MetricRow
                                         label={vis.avgHeartRate?.label ?? '💓 Avg HR'}
                                         value={formatHeartRate(activity.average_heartrate)}
                                         visible={vis.avgHeartRate?.state !== 'hide' && !!activity.average_heartrate}
                                         masked={vis.avgHeartRate?.state === 'mask'}
+                                        unit={vis.avgHeartRate?.unit}
                                     />
                                     <MetricRow
                                         label={vis.maxHeartRate?.label ?? '💗 Max HR'}
                                         value={formatHeartRate(activity.max_heartrate)}
                                         visible={vis.maxHeartRate?.state !== 'hide' && !!activity.max_heartrate}
                                         masked={vis.maxHeartRate?.state === 'mask'}
+                                        unit={vis.maxHeartRate?.unit}
                                     />
                                     <MetricRow
                                         label={vis.pace?.label ?? '⏱️ Pace'}
                                         value={formatPace(activity.average_speed)}
                                         visible={showPace}
                                         masked={vis.pace?.state === 'mask'}
+                                        unit={vis.pace?.unit}
                                     />
                                     <MetricRow
                                         label={vis.speed?.label ?? '🚀 Speed'}
                                         value={formatSpeedKmh(activity.average_speed)}
                                         visible={showSpeed}
                                         masked={vis.speed?.state === 'mask'}
+                                        unit={vis.speed?.unit}
                                     />
                                     <MetricRow
                                         label={vis.avgPower?.label ?? '⚡ Avg Power'}
                                         value={activity.average_watts ? `${Math.round(activity.average_watts)} W` : '--'}
                                         visible={vis.avgPower?.state !== 'hide' && !!activity.average_watts}
                                         masked={vis.avgPower?.state === 'mask'}
+                                        unit={vis.avgPower?.unit}
                                     />
                                     <MetricRow
                                         label={vis.cadence?.label ?? '🔄 Cadence'}
                                         value={formatCadence(activity.average_cadence ? activity.average_cadence * 2 : undefined)}
                                         visible={vis.cadence?.state !== 'hide' && !!activity.average_cadence}
                                         masked={vis.cadence?.state === 'mask'}
+                                        unit={vis.cadence?.unit}
                                     />
                                     <MetricRow
                                         label={vis.elevation?.label ?? '⛰️ Elevation'}
                                         value={formatElevation(activity.total_elevation_gain)}
                                         visible={vis.elevation?.state !== 'hide' && activity.total_elevation_gain > 0}
                                         masked={vis.elevation?.state === 'mask'}
+                                        unit={vis.elevation?.unit}
                                     />
                                     <MetricRow
                                         label={modal.maxSpeed.label}
                                         value={`${(activity.max_speed * 3.6).toFixed(1)} km/h`}
                                         visible={showMaxSpeed}
                                         masked={maskedMaxSpeed}
+                                        unit={modal.maxSpeed.unit}
                                     />
                                     <MetricRow
                                         label={modal.maxPower.label}
                                         value={`${Math.round(activity.max_watts!)} W`}
                                         visible={showMaxPower}
                                         masked={maskedMaxPower}
+                                        unit={modal.maxPower.unit}
                                     />
                                     <MetricRow
                                         label={modal.weightedPower.label}
                                         value={`${Math.round(activity.weighted_average_watts!)} W`}
                                         visible={showWeightedPower}
                                         masked={maskedWeightedPower}
+                                        unit={modal.weightedPower.unit}
                                     />
                                     <MetricRow
                                         label={modal.calories.label}
                                         value={formatKilojoules(activity.kilojoules) ?? '--'}
                                         visible={showCalories}
                                         masked={maskedCalories}
+                                        unit={modal.calories.unit}
                                     />
                                     <MetricRow
                                         label={modal.elevRange.label}
                                         value={`${formatElevation(activity.elev_low!)} – ${formatElevation(activity.elev_high!)}`}
                                         visible={showElevRange}
                                         masked={maskedElevRange}
+                                        unit={modal.elevRange.unit}
                                     />
                                 </div>
                             </div>
@@ -303,12 +317,12 @@ function HeroStat({ label, value, icon, color }: { label: string; value: string;
     )
 }
 
-function MetricRow({ label, value, visible, masked }: { label: string; value: string; visible: boolean; masked?: boolean }) {
+function MetricRow({ label, value, visible, masked, unit }: { label: string; value: string; visible: boolean; masked?: boolean; unit?: string }) {
     if (!visible) return null
     return (
         <div className="flex items-center justify-between py-1 border-b border-border/50 last:border-0">
             <span className="text-text-secondary text-[13px]">{label}</span>
-            <span className="font-semibold text-text-primary text-[13px]">{masked ? APP_CONFIG.maskedValue : value}</span>
+            <span className="font-semibold text-text-primary text-[13px]">{masked ? formatMaskedValue(APP_CONFIG.maskedValue, unit) : value}</span>
         </div>
     )
 }

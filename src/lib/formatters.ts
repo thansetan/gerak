@@ -61,3 +61,7 @@ export function formatSpeedKmh(metersPerSecond: number): string {
 export function formatNumber(val: number, suffix = ''): string {
   return `${Math.round(val)}${suffix}`
 }
+
+export function formatMaskedValue(maskedValue: string, unit?: string): string {
+  return unit ? `${maskedValue} ${unit}` : maskedValue
+}

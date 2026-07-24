@@ -7,6 +7,7 @@ import {
   formatSpeed,
   formatCadence,
   formatElevation,
+  formatMaskedValue,
 } from '../src/lib/formatters'
 
 describe('formatDistance', () => {
@@ -92,5 +93,24 @@ describe('formatElevation', () => {
 
   it('formats 0 elevation', () => {
     expect(formatElevation(0)).toBe('0 m')
+  })
+})
+
+describe('formatMaskedValue', () => {
+  it('returns masked value with unit', () => {
+    expect(formatMaskedValue('●●●', 'km')).toBe('●●● km')
+  })
+
+  it('returns just masked value without unit', () => {
+    expect(formatMaskedValue('●●●', '')).toBe('●●●')
+  })
+
+  it('returns just masked value with undefined unit', () => {
+    expect(formatMaskedValue('●●●')).toBe('●●●')
+  })
+
+  it('works with different masked values and units', () => {
+    expect(formatMaskedValue('***', 'm')).toBe('*** m')
+    expect(formatMaskedValue('???', 'km/h')).toBe('??? km/h')
   })
 })
