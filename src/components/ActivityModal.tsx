@@ -27,7 +27,7 @@ interface ActivityModalProps {
 export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const group = getGroupForActivity(activity.sport_type)
     const groupConfig = ACTIVITY_GROUPS[group]
-    const modal = APP_CONFIG.modal
+    const modal = { ...APP_CONFIG.modal, ...groupConfig.modalConfig } as typeof APP_CONFIG.modal
     const vis = groupConfig.visibility
     const { data: gearMap } = useQuery({ queryKey: ['gear'], queryFn: () => getGear(), staleTime: Infinity })
     const gearDetail = gearMap?.[activity.gear_id ?? '']
