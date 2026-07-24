@@ -39,7 +39,7 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: ['Walk'],
         visibility: defaultVisibility(),
         cardClick: 'modal',
-        gearConfig: { state: 'show', label: 'Shoes', value: 'brand_model' },
+        gearConfig: { state: 'show', label: 'Shoes', value: 'nickname' },
     },
     bike: {
         name: 'bike',
