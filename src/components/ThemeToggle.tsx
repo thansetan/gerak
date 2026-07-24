@@ -25,13 +25,11 @@ export function ThemeToggle() {
     <button
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={() => setDark((d) => !d)}
-      className="text-2xl cursor-pointer select-none
-                 transition-transform duration-200 hover:scale-110 active:scale-95
-                 focus-visible:outline-2 focus-visible:outline-offset-2
-                 focus-visible:outline-indigo-500 dark:focus-visible:outline-amber-400
-                 rounded-md"
+      className="font-mono text-xs font-medium tracking-tight border-2 border-border px-2 py-0.5 cursor-pointer
+                 hover:bg-text hover:text-bg transition-colors duration-150
+                 active:translate-x-px active:translate-y-px"
     >
-      {dark ? '🌙' : '☀️'}
+      {dark ? 'LIGHT' : 'DARK'}
     </button>
   )
 }

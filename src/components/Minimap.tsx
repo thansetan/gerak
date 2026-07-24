@@ -39,7 +39,7 @@ export function Minimap({ summaryPolyline, accentColor, bgColor }: MinimapProps)
   const endY = toY(path[path.length - 1][0])
 
   return (
-    <div className="relative rounded-xl overflow-hidden" style={{ background: bgColor }}>
+    <div className="relative border-2 border-border overflow-hidden" style={{ background: bgColor }}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-auto"

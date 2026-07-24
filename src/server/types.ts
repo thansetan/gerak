@@ -57,6 +57,7 @@ export interface ActivityGroup {
     visibility: StatsVisibility
     cardClick: 'modal' | 'none'
     gearConfig?: GearConfig
+    modalConfig?: Partial<ModalConfig>
 }
 
 export interface ModalConfig {

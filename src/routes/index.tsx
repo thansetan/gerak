@@ -107,7 +107,7 @@ function Dashboard() {
           />
           <StatsBar stats={stats} group={group ?? 'all'} />
           {isFetching && !isLoading && (
-            <p className="text-xs text-text-secondary mb-2">Refreshing...</p>
+            <p className="font-mono text-xs text-text-muted mb-2 uppercase tracking-tight">Refreshing...</p>
           )}
           <ActivityList activities={filtered} onCardClick={handleCardClick} />
         </>

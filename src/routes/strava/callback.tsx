@@ -53,23 +53,25 @@ function StravaCallback() {
   if (status === 'exchanging') {
     return (
       <div className="mx-auto max-w-lg px-4 py-16 text-center">
-        <p className="text-text-secondary">Exchanging authorization code for refresh token...</p>
+        <p className="font-mono text-xs text-text-muted uppercase tracking-tight">
+          Exchanging authorization code...
+        </p>
       </div>
     )
   }
 
   return (
     <div className="mx-auto max-w-lg px-4 py-16 text-center">
-      <h1 className="text-2xl font-bold text-text-primary mb-4">
+      <h1 className="font-mono text-xl font-bold text-text mb-4 uppercase tracking-tight">
         {status === 'success' ? 'Setup Complete' : 'Setup Failed'}
       </h1>
-      <pre className="rounded-lg bg-surface-secondary p-4 text-left text-sm text-text-primary whitespace-pre-wrap">
+      <pre className="border-2 border-border bg-surface p-4 text-left font-mono text-xs text-text whitespace-pre-wrap">
         {message}
       </pre>
       {status === 'success' && (
         <button
           onClick={() => navigate({ to: '/' })}
-          className="mt-6 rounded-lg bg-surface-accent px-6 py-3 text-sm font-medium text-text-on-accent transition-all cursor-pointer hover:bg-surface-accent-hover active:scale-[0.98]"
+          className="mt-6 font-mono text-xs font-medium uppercase tracking-tight border-2 border-border px-4 py-1.5 cursor-pointer hover:bg-text hover:text-bg transition-colors duration-150"
         >
           Go to Dashboard
         </button>
