@@ -65,6 +65,7 @@ function Dashboard() {
 
   const activities = data?.activities ?? []
   const syncedAt = data?.syncedAt
+  const fetchWindowStart = data?.fetchWindowStart
   const athleteName = athlete ? `${athlete.firstname} ${athlete.lastname}` : undefined
   const profileUrl = athlete?.profile
 
@@ -88,7 +89,7 @@ function Dashboard() {
   if (isError) {
     return (
       <div className="mx-auto max-w-[1400px] px-4 py-6">
-        <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} />
+        <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} fetchWindowStart={fetchWindowStart} />
         <ErrorState
           message={error instanceof Error ? error.message : 'An unexpected error occurred'}
           onRetry={() => refetch()}
@@ -106,7 +107,7 @@ function Dashboard() {
         </>
       ) : (
         <>
-          <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} activitiesCount={activities.length} />
+          <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} activitiesCount={activities.length} fetchWindowStart={fetchWindowStart} />
           <GroupFilter
             groups={groupCounts}
             active={group ?? 'all'}

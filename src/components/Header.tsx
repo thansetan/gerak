@@ -1,14 +1,15 @@
 import { ThemeToggle } from './ThemeToggle'
-import { formatDateTime, getTimezoneLabel } from '../lib/formatters'
+import { formatDate, formatDateTime, getTimezoneLabel } from '../lib/formatters'
 
 interface HeaderProps {
   syncedAt?: string
   athleteName?: string
   profileUrl?: string
   activitiesCount?: number
+  fetchWindowStart?: string
 }
 
-export function Header({ syncedAt, athleteName, profileUrl, activitiesCount }: HeaderProps) {
+export function Header({ syncedAt, athleteName, profileUrl, activitiesCount, fetchWindowStart }: HeaderProps) {
   return (
     <header className="flex items-center justify-between border-b-2 border-border pb-4 mb-8">
       <div>
@@ -17,7 +18,7 @@ export function Header({ syncedAt, athleteName, profileUrl, activitiesCount }: H
         </h1>
         {activitiesCount != null && (
           <p className="text-xs text-text-muted mt-1">
-            {athleteName ? `${athleteName}'s ` : ''}latest {activitiesCount} perGERAKan
+            {athleteName ? `${athleteName}'s ` : ''}latest {activitiesCount} perGERAKan since {formatDate(fetchWindowStart!)}
           </p>
         )}
         {syncedAt && (

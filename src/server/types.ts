@@ -129,6 +129,8 @@ export interface AppConfig {
 export interface ActivitiesResponse {
     activities: StravaActivity[]
     syncedAt: string
+    fetchWindowStart: string
+    fetchWindowEnd: string
 }
 
 export interface AthleteProfile {

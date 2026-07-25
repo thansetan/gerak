@@ -1,11 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getAccessToken } from './auth'
 import { getFromCache, setToCache } from './cache'
+import { ACTIVITIES_CACHE_KEY } from './activities'
 import type { GearDetail, ActivitiesResponse } from './types'
 
 const GEAR_CACHE_KEY = 'strava:gear'
 const GEAR_TTL = 604800
-const ACTIVITIES_CACHE_KEY = 'strava:activities:200'
 
 export const getGear = createServerFn().handler(async () => {
     const cached = await getFromCache<Record<string, GearDetail>>(GEAR_CACHE_KEY)
