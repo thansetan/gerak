@@ -42,13 +42,14 @@ export interface StravaActivity {
 
 export type VisibilityState = 'show' | 'hide' | 'mask'
 
-export interface StatVisibility {
+export interface StatConfig {
     state: VisibilityState
     label: string
     unit: string
+    valueCalculation?: (value: any) => string
 }
 
-export type StatsVisibility = Record<string, StatVisibility>
+export type StatsConfig = Record<string, StatConfig>
 
 export interface ActivityGroupColor {
     accent: string
@@ -59,7 +60,7 @@ export interface ActivityGroup {
     name: string
     label: string
     sportTypes: string[] | null
-    visibility: StatsVisibility
+    visibility: StatsConfig
     color: ActivityGroupColor
     cardClick: 'modal' | 'none'
     gearConfig?: GearConfig
@@ -68,17 +69,17 @@ export interface ActivityGroup {
 
 export interface ModalConfig {
     showMinimap: boolean
-    maxSpeed: StatVisibility
-    maxPower: StatVisibility
-    weightedPower: StatVisibility
-    calories: StatVisibility
-    elevRange: StatVisibility
-    device: StatVisibility
-    achievements: StatVisibility
-    private: StatVisibility
-    commute: StatVisibility
-    trainer: StatVisibility
-    manual: StatVisibility
+    maxSpeed: StatConfig
+    maxPower: StatConfig
+    weightedPower: StatConfig
+    calories: StatConfig
+    elevRange: StatConfig
+    device: StatConfig
+    achievements: StatConfig
+    private: StatConfig
+    commute: StatConfig
+    trainer: StatConfig
+    manual: StatConfig
 }
 
 export type GearValueDisplay = 'brand_model' | 'nickname' | 'full_name'

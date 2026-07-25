@@ -1,15 +1,7 @@
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config';
 import { getGroupForActivity } from '../lib/groups';
-import {
-    formatCadence,
-    formatDate,
-    formatDistance,
-    formatElevation,
-    formatHeartRate,
-    formatPace,
-    formatSpeed,
-} from '../lib/formatters';
-import type { StatVisibility, StravaActivity } from '../server/types';
+import { formatDate } from '../lib/formatters';
+import type { StatConfig, StravaActivity } from '../server/types';
 
 interface ActivityCardProps {
     activity: StravaActivity;
@@ -22,10 +14,13 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
     const statsVisibility = groupConfig.visibility
     const color = groupConfig.color
 
-    function renderStat(stat: StatVisibility | undefined, condition: boolean, formatted: string) {
+    function renderStat(stat: StatConfig | undefined, condition: boolean, rawValue: any) {
         if (!stat || stat.state === 'hide') return null
         if (stat.state === 'mask') return <Metric label={stat.label} value={`${APP_CONFIG.maskedValue} ${stat.unit}`} />
-        if (condition) return <Metric label={stat.label} value={formatted} />
+        if (condition) {
+            const calculated = stat.valueCalculation?.(rawValue) ?? ''
+            return <Metric label={stat.label} value={`${calculated} ${stat.unit}`} />
+        }
         return null
     }
 
@@ -56,14 +51,14 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
                     </span>
                 </div>
                 <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-                    {renderStat(statsVisibility.distance, activity.distance > 0, formatDistance(activity.distance))}
-                    {renderStat(statsVisibility.avgHeartRate, !!activity.average_heartrate, formatHeartRate(activity.average_heartrate))}
-                    {renderStat(statsVisibility.maxHeartRate, !!activity.max_heartrate, formatHeartRate(activity.max_heartrate))}
-                    {renderStat(statsVisibility.speed, activity.average_speed > 0, formatSpeed(activity.average_speed))}
-                    {renderStat(statsVisibility.pace, activity.average_speed > 0, formatPace(activity.average_speed))}
-                    {renderStat(statsVisibility.avgPower, !!activity.average_watts, `${Math.round(activity.average_watts!)} W`)}
-                    {renderStat(statsVisibility.cadence, !!activity.average_cadence, formatCadence(activity.average_cadence! * 2))}
-                    {renderStat(statsVisibility.elevation, activity.total_elevation_gain > 0, formatElevation(activity.total_elevation_gain))}
+                    {renderStat(statsVisibility.distance, activity.distance > 0, activity.distance)}
+                    {renderStat(statsVisibility.avgHeartRate, !!activity.average_heartrate, activity.average_heartrate)}
+                    {renderStat(statsVisibility.maxHeartRate, !!activity.max_heartrate, activity.max_heartrate)}
+                    {renderStat(statsVisibility.speed, activity.average_speed > 0, activity.average_speed)}
+                    {renderStat(statsVisibility.pace, activity.average_speed > 0, activity.average_speed)}
+                    {renderStat(statsVisibility.avgPower, !!activity.average_watts, activity.average_watts)}
+                    {renderStat(statsVisibility.cadence, !!activity.average_cadence, activity.average_cadence)}
+                    {renderStat(statsVisibility.elevation, activity.total_elevation_gain > 0, activity.total_elevation_gain)}
                 </div>
             </div>
         </div>

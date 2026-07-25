@@ -28,14 +28,32 @@ describe('ACTIVITY_GROUPS', () => {
     }
   })
 
-  it('default state is show for all stats in run group', () => {
-    for (const [, stat] of Object.entries(ACTIVITY_GROUPS.run.visibility)) {
-      expect((stat as { state: VisibilityState }).state).toBe('show')
-    }
+  it('default visibility has both show and mask states for run group', () => {
+    const vis = ACTIVITY_GROUPS.run.visibility
+    expect(vis.distance?.state).toBe('show')
+    expect(vis.avgHeartRate?.state).toBe('mask')
+    expect(vis.maxHeartRate?.state).toBe('mask')
+    expect(vis.pace?.state).toBe('mask')
+    expect(vis.avgPower?.state).toBe('show')
   })
 
   it('has distance with km unit for run group', () => {
     expect(ACTIVITY_GROUPS.run.visibility.distance.unit).toBe('km')
+  })
+
+  it('metric stats have valueCalculation as a function', () => {
+    const vis = ACTIVITY_GROUPS.run.visibility
+    const metricKeys = ['distance', 'avgHeartRate', 'maxHeartRate', 'pace', 'avgPower', 'cadence', 'elevation']
+    for (const key of metricKeys) {
+      expect(typeof vis[key]?.valueCalculation).toBe('function')
+    }
+  })
+
+  it('valueCalculation for distance converts meters to kilometers', () => {
+    const calc = ACTIVITY_GROUPS.run.visibility.distance.valueCalculation!
+    expect(calc(10000)).toBe('10.00')
+    expect(calc(42195)).toBe('42.20')
+    expect(calc(0)).toBe('0.00')
   })
 
   it('shows speed and hides pace for bike group', () => {
@@ -78,7 +96,7 @@ describe('APP_CONFIG', () => {
     expect(APP_CONFIG.maxFetchedActivities).toBe(200)
   })
 
-  it('modal has all StatVisibility fields as objects', () => {
+  it('modal has all StatConfig fields as objects', () => {
     const { modal } = APP_CONFIG
     const statFields = ['maxSpeed', 'maxPower', 'weightedPower', 'calories', 'elevRange', 'device', 'achievements'] as const
     for (const field of statFields) {

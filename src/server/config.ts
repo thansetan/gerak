@@ -1,18 +1,19 @@
-import type { ActivityGroup, AppConfig, StatsVisibility } from './types';
+import type { ActivityGroup, AppConfig, StatsConfig } from './types';
 
-function defaultVisibility(): StatsVisibility {
+function defaultVisibility(): StatsConfig {
     return {
-        distance: { state: 'show', label: 'Distance', unit: 'km' },
-        avgHeartRate: { state: 'show', label: 'Avg HR', unit: 'bpm' },
-        maxHeartRate: { state: 'show', label: 'Max HR', unit: 'bpm' },
-        pace: { state: 'show', label: 'Avg Pace', unit: '/km' },
-        avgPower: { state: 'show', label: 'Avg Power', unit: 'W' },
-        cadence: { state: 'show', label: 'Avg Cadence', unit: 'spm' },
-        elevation: { state: 'show', label: 'Elevation Gain', unit: 'm' },
-        totalDistance: { state: 'show', label: 'Distance', unit: 'km' },
-        totalDuration: { state: 'show', label: 'Time', unit: 'hrs' },
-        totalElevation: { state: 'show', label: 'Elevation', unit: 'm' },
-        activeDays: { state: 'show', label: 'Days', unit: '' },
+        distance: { state: 'show', label: 'Distance', unit: 'km', valueCalculation: (v) => (v / 1000).toFixed(2) },
+        avgHeartRate: { state: 'mask', label: 'Avg HR', unit: 'bpm', valueCalculation: (v) => Math.round(v).toString() },
+        maxHeartRate: { state: 'mask', label: 'Max HR', unit: 'bpm', valueCalculation: (v) => Math.round(v).toString() },
+        pace: { state: 'mask', label: 'Avg Pace', unit: '/km', valueCalculation: (v) => { if (v <= 0) return '--'; const mpk = 1000 / v / 60; const min = Math.floor(mpk); const sec = Math.round((mpk - min) * 60); return `${min}:${sec.toString().padStart(2, '0')}` } },
+        avgPower: { state: 'show', label: 'Avg Power', unit: 'W', valueCalculation: (v) => Math.round(v).toString() },
+        cadence: { state: 'show', label: 'Avg Cadence', unit: 'spm', valueCalculation: (v) => Math.round(v * 2).toString() },
+        elevation: { state: 'show', label: 'Elevation Gain', unit: 'm', valueCalculation: (v) => Math.round(v).toString() },
+        duration: { state: 'show', label: 'Duration', unit: '', valueCalculation: (v) => { const h = Math.floor(v / 3600); const m = Math.floor((v % 3600) / 60); const s = v % 60; if (h > 0) return `${h}h ${m}m ${s}s`; if (m > 0) return `${m}m ${s}s`; return `${s}s` } },
+        totalDistance: { state: 'show', label: 'Distance', unit: 'km', valueCalculation: (v) => (v / 1000).toFixed(2) },
+        totalDuration: { state: 'show', label: 'Time', unit: 'hrs', valueCalculation: (v) => (v / 3600).toFixed(1) },
+        totalElevation: { state: 'show', label: 'Elevation', unit: 'm', valueCalculation: (v) => Math.round(v).toString() },
+        activeDays: { state: 'show', label: 'Days', unit: '', valueCalculation: (v) => Math.round(v).toString() },
     };
 }
 
@@ -51,7 +52,7 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         visibility: {
             ...defaultVisibility(),
             pace: { state: 'hide', label: 'Avg Pace', unit: '/km' },
-            speed: { state: 'show', label: 'Avg Speed', unit: 'km/h' },
+            speed: { state: 'show', label: 'Avg Speed', unit: 'km/h', valueCalculation: (v) => (v * 3.6).toFixed(1) },
         },
         color: { accent: '#2563eb', bg: '#eff6ff' },
         cardClick: 'modal',
@@ -63,12 +64,8 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: ['Badminton'],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: {
-                state: 'hide',
-                label: 'Total Distance',
-                unit: 'km',
-            },
-            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
+            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km', valueCalculation: (v) => (v / 1000).toFixed(2) },
+            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm', valueCalculation: (v) => Math.round(v).toString() },
         },
         color: { accent: '#9333ea', bg: '#faf5ff' },
         cardClick: 'modal',
@@ -77,11 +74,7 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
             elevRange: { state: 'hide', label: 'Elev Range', unit: 'm' },
             maxSpeed: { state: 'hide', label: 'Max Speed', unit: 'km/h' },
             maxPower: { state: 'hide', label: 'Max Power', unit: 'W' },
-            weightedPower: {
-                state: 'hide',
-                label: 'Weighted Power',
-                unit: 'W',
-            },
+            weightedPower: { state: 'hide', label: 'Weighted Power', unit: 'W' },
         },
     },
     strength: {
@@ -90,12 +83,8 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: ['Strength', 'WeightTraining'],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: {
-                state: 'hide',
-                label: 'Total Distance',
-                unit: 'km',
-            },
-            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
+            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km', valueCalculation: (v) => (v / 1000).toFixed(2) },
+            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm', valueCalculation: (v) => Math.round(v).toString() },
         },
         color: { accent: '#ca8a04', bg: '#fefce8' },
         cardClick: 'modal',
@@ -104,11 +93,7 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
             elevRange: { state: 'hide', label: 'Elev Range', unit: 'm' },
             maxSpeed: { state: 'hide', label: 'Max Speed', unit: 'km/h' },
             maxPower: { state: 'hide', label: 'Max Power', unit: 'W' },
-            weightedPower: {
-                state: 'hide',
-                label: 'Weighted Power',
-                unit: 'W',
-            },
+            weightedPower: { state: 'hide', label: 'Weighted Power', unit: 'W' },
         },
     },
     other: {
@@ -117,12 +102,8 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         sportTypes: [],
         visibility: {
             ...defaultVisibility(),
-            totalDistance: {
-                state: 'hide',
-                label: 'Total Distance',
-                unit: 'km',
-            },
-            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm' },
+            totalDistance: { state: 'hide', label: 'Total Distance', unit: 'km', valueCalculation: (v) => (v / 1000).toFixed(2) },
+            totalElevation: { state: 'hide', label: 'Elevation', unit: 'm', valueCalculation: (v) => Math.round(v).toString() },
         },
         color: { accent: '#525252', bg: '#fafafa' },
         cardClick: 'modal',
@@ -137,11 +118,11 @@ export const APP_CONFIG: AppConfig = {
     maxFetchedActivities: 200,
     modal: {
         showMinimap: true,
-        maxSpeed: { state: 'show', label: 'Max Speed', unit: 'km/h' },
-        maxPower: { state: 'show', label: 'Max Power', unit: 'W' },
-        weightedPower: { state: 'show', label: 'Weighted Power', unit: 'W' },
-        calories: { state: 'hide', label: 'Calories', unit: 'kJ' },
-        elevRange: { state: 'show', label: 'Elev Range', unit: 'm' },
+        maxSpeed: { state: 'show', label: 'Max Speed', unit: 'km/h', valueCalculation: (v) => (v * 3.6).toFixed(1) },
+        maxPower: { state: 'show', label: 'Max Power', unit: 'W', valueCalculation: (v) => Math.round(v).toString() },
+        weightedPower: { state: 'show', label: 'Weighted Power', unit: 'W', valueCalculation: (v) => Math.round(v).toString() },
+        calories: { state: 'hide', label: 'Calories', unit: 'kJ', valueCalculation: (v) => Math.round(v * 0.239).toString() },
+        elevRange: { state: 'show', label: 'Elev Range', unit: 'm', valueCalculation: (v) => Math.round(v).toString() },
         device: { state: 'show', label: 'Device', unit: '' },
         achievements: { state: 'show', label: 'Achievements', unit: '' },
         private: { state: 'hide', label: 'Private', unit: '' },

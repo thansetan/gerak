@@ -4,19 +4,18 @@ import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
 import { getGear } from '../server/gear'
 import { getGroupForActivity } from '../lib/groups'
 import { Minimap } from './Minimap'
-import type { StravaActivity } from '../server/types'
+import type { StatConfig, StravaActivity } from '../server/types'
+
+function statDisplay(stat: StatConfig | undefined, rawValue: any): string | null {
+    if (!stat || stat.state === 'hide') return null
+    if (stat.state === 'mask') return `${APP_CONFIG.maskedValue}${stat.unit ? ` ${stat.unit}` : ''}`
+    const calc = stat.valueCalculation?.(rawValue) ?? ''
+    return `${calc}${stat.unit ? ` ${stat.unit}` : ''}`
+}
 import {
-    formatCadence,
     formatDateTime,
-    formatDistance,
     getTimezoneLabel,
-    formatDurationFull,
-    formatElevation,
-    formatHeartRate,
-    formatKilojoules,
     formatMaskedValue,
-    formatPace,
-    formatSpeedKmh,
     getGearDisplayValue,
 } from '../lib/formatters'
 
@@ -53,10 +52,6 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
             document.body.style.overflow = ''
         }
     }, [])
-
-    const hasDistance = activity.distance > 0
-    const showPace = vis.pace?.state !== 'hide' && activity.average_speed > 0
-    const showSpeed = vis.speed?.state === 'show' && activity.average_speed > 0
 
     const showElevRange = modal.elevRange.state !== 'hide' && activity.elev_high != null && group !== 'badminton'
     const maskedElevRange = modal.elevRange.state === 'mask'
@@ -137,13 +132,18 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                     )}
 
                     {(() => {
-                        const heroStats: { label: string; value: string }[] = [
-                            { label: 'Duration', value: formatDurationFull(activity.moving_time) },
-                        ]
-                        if (hasDistance) heroStats.push({ label: 'Distance', value: formatDistance(activity.distance) })
-                        if (showPace) heroStats.push({ label: 'Pace', value: formatPace(activity.average_speed) })
-                        if (showSpeed) heroStats.push({ label: 'Speed', value: formatSpeedKmh(activity.average_speed) })
-                        if (heroStats.length === 1) heroStats.push({ label: 'Active Time', value: formatDurationFull(activity.moving_time) })
+                        const heroStats: { label: string; value: string }[] = []
+                        const dur = statDisplay(vis.duration, activity.moving_time)
+                        if (dur) heroStats.push({ label: vis.duration!.label, value: dur })
+                        const dist = statDisplay(vis.distance, activity.distance)
+                        if (dist && activity.distance > 0) heroStats.push({ label: vis.distance!.label, value: dist })
+                        const pace = statDisplay(vis.pace, activity.average_speed)
+                        if (pace && activity.average_speed > 0) heroStats.push({ label: vis.pace!.label, value: pace })
+                        if (vis.speed?.state === 'show' && activity.average_speed > 0) {
+                            const speed = statDisplay(vis.speed, activity.average_speed)
+                            if (speed) heroStats.push({ label: vis.speed.label, value: speed })
+                        }
+                        if (heroStats.length === 1) heroStats.push({ label: 'Active Time', value: heroStats[0].value })
 
                         return (
                             <div className="flex border-2 border-border">
@@ -172,94 +172,68 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                     <MetricRow
                                         label={vis.distance?.label ?? 'Distance'}
-                                        value={formatDistance(activity.distance)}
-                                        visible={vis.distance?.state !== 'hide' && hasDistance}
-                                        masked={vis.distance?.state === 'mask'}
-                                        unit={vis.distance?.unit}
+                                        value={statDisplay(vis.distance, activity.distance) ?? '--'}
+                                        visible={vis.distance?.state !== 'hide' && activity.distance > 0}
                                     />
                                     <MetricRow
                                         label={vis.avgHeartRate?.label ?? 'Avg HR'}
-                                        value={formatHeartRate(activity.average_heartrate)}
+                                        value={statDisplay(vis.avgHeartRate, activity.average_heartrate) ?? '--'}
                                         visible={vis.avgHeartRate?.state !== 'hide' && !!activity.average_heartrate}
-                                        masked={vis.avgHeartRate?.state === 'mask'}
-                                        unit={vis.avgHeartRate?.unit}
                                     />
                                     <MetricRow
                                         label={vis.maxHeartRate?.label ?? 'Max HR'}
-                                        value={formatHeartRate(activity.max_heartrate)}
+                                        value={statDisplay(vis.maxHeartRate, activity.max_heartrate) ?? '--'}
                                         visible={vis.maxHeartRate?.state !== 'hide' && !!activity.max_heartrate}
-                                        masked={vis.maxHeartRate?.state === 'mask'}
-                                        unit={vis.maxHeartRate?.unit}
                                     />
                                     <MetricRow
                                         label={vis.pace?.label ?? 'Pace'}
-                                        value={formatPace(activity.average_speed)}
-                                        visible={showPace}
-                                        masked={vis.pace?.state === 'mask'}
-                                        unit={vis.pace?.unit}
+                                        value={statDisplay(vis.pace, activity.average_speed) ?? '--'}
+                                        visible={vis.pace?.state !== 'hide' && activity.average_speed > 0}
                                     />
                                     <MetricRow
                                         label={vis.speed?.label ?? 'Speed'}
-                                        value={formatSpeedKmh(activity.average_speed)}
-                                        visible={showSpeed}
-                                        masked={vis.speed?.state === 'mask'}
-                                        unit={vis.speed?.unit}
+                                        value={statDisplay(vis.speed, activity.average_speed) ?? '--'}
+                                        visible={vis.speed?.state === 'show' && activity.average_speed > 0}
                                     />
                                     <MetricRow
                                         label={vis.avgPower?.label ?? 'Avg Power'}
-                                        value={activity.average_watts ? `${Math.round(activity.average_watts)} W` : '--'}
+                                        value={statDisplay(vis.avgPower, activity.average_watts) ?? '--'}
                                         visible={vis.avgPower?.state !== 'hide' && !!activity.average_watts}
-                                        masked={vis.avgPower?.state === 'mask'}
-                                        unit={vis.avgPower?.unit}
                                     />
                                     <MetricRow
                                         label={vis.cadence?.label ?? 'Cadence'}
-                                        value={formatCadence(activity.average_cadence ? activity.average_cadence * 2 : undefined)}
+                                        value={statDisplay(vis.cadence, activity.average_cadence) ?? '--'}
                                         visible={vis.cadence?.state !== 'hide' && !!activity.average_cadence}
-                                        masked={vis.cadence?.state === 'mask'}
-                                        unit={vis.cadence?.unit}
                                     />
                                     <MetricRow
                                         label={vis.elevation?.label ?? 'Elevation'}
-                                        value={formatElevation(activity.total_elevation_gain)}
+                                        value={statDisplay(vis.elevation, activity.total_elevation_gain) ?? '--'}
                                         visible={vis.elevation?.state !== 'hide' && activity.total_elevation_gain > 0}
-                                        masked={vis.elevation?.state === 'mask'}
-                                        unit={vis.elevation?.unit}
                                     />
                                     <MetricRow
                                         label={modal.maxSpeed.label}
-                                        value={`${(activity.max_speed * 3.6).toFixed(1)} km/h`}
+                                        value={statDisplay(modal.maxSpeed, activity.max_speed) ?? '--'}
                                         visible={showMaxSpeed}
-                                        masked={maskedMaxSpeed}
-                                        unit={modal.maxSpeed.unit}
                                     />
                                     <MetricRow
                                         label={modal.maxPower.label}
-                                        value={`${Math.round(activity.max_watts!)} W`}
+                                        value={statDisplay(modal.maxPower, activity.max_watts) ?? '--'}
                                         visible={showMaxPower}
-                                        masked={maskedMaxPower}
-                                        unit={modal.maxPower.unit}
                                     />
                                     <MetricRow
                                         label={modal.weightedPower.label}
-                                        value={`${Math.round(activity.weighted_average_watts!)} W`}
+                                        value={statDisplay(modal.weightedPower, activity.weighted_average_watts) ?? '--'}
                                         visible={showWeightedPower}
-                                        masked={maskedWeightedPower}
-                                        unit={modal.weightedPower.unit}
                                     />
                                     <MetricRow
                                         label={modal.calories.label}
-                                        value={formatKilojoules(activity.kilojoules) ?? '--'}
+                                        value={statDisplay(modal.calories, activity.kilojoules) ?? '--'}
                                         visible={showCalories}
-                                        masked={maskedCalories}
-                                        unit={modal.calories.unit}
                                     />
                                     <MetricRow
                                         label={modal.elevRange.label}
-                                        value={`${formatElevation(activity.elev_low!)} - ${formatElevation(activity.elev_high!)}`}
+                                        value={`${statDisplay(modal.elevRange, activity.elev_low) ?? ''} - ${statDisplay(modal.elevRange, activity.elev_high) ?? ''}`}
                                         visible={showElevRange}
-                                        masked={maskedElevRange}
-                                        unit={modal.elevRange.unit}
                                     />
                                 </div>
                             </div>
@@ -309,12 +283,12 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     )
 }
 
-function MetricRow({ label, value, visible, masked, unit }: { label: string; value: string; visible: boolean; masked?: boolean; unit?: string }) {
+function MetricRow({ label, value, visible }: { label: string; value: string; visible: boolean }) {
     if (!visible) return null
     return (
         <div className="flex items-center justify-between py-1">
             <span className="font-mono text-[11px] text-text-muted uppercase tracking-tight">{label}</span>
-            <span className="font-mono text-xs font-medium text-text tabular-nums">{masked ? formatMaskedValue(APP_CONFIG.maskedValue, unit) : value}</span>
+            <span className="font-mono text-xs font-medium text-text tabular-nums">{value}</span>
         </div>
     )
 }
