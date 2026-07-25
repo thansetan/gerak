@@ -57,8 +57,8 @@ describe('APP_CONFIG', () => {
     expect(typeof APP_CONFIG.maskedValue).toBe('string')
   })
 
-  it('default maskedValue is ●●●', () => {
-    expect(APP_CONFIG.maskedValue).toBe('●●●')
+  it('default maskedValue is --', () => {
+    expect(APP_CONFIG.maskedValue).toBe('--')
   })
 
   it('has a timezone string', () => {
@@ -161,6 +161,6 @@ describe('APP_CONFIG', () => {
 
   it('bike group uses full_name gear value', () => {
     expect(ACTIVITY_GROUPS.bike.gearConfig?.value).toBe('full_name')
-    expect(ACTIVITY_GROUPS.bike.gearConfig?.label).toBe('🚴 Bike')
+    expect(ACTIVITY_GROUPS.bike.gearConfig?.label).toBe('Bike')
   })
 })

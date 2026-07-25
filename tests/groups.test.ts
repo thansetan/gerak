@@ -59,7 +59,7 @@ describe('getGroupNames', () => {
 
 describe('getGroupLabel', () => {
   it('returns label for known group', () => {
-    expect(getGroupLabel('run')).toBe('🏃 Run')
+    expect(getGroupLabel('run')).toBe('Run')
   })
 
   it('returns name as label for unknown group', () => {
