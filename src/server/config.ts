@@ -54,7 +54,8 @@ const DEFAULT_STATS: StatsConfig = {
             const mpk = 1000 / a.average_speed / 60;
             const min = Math.floor(mpk);
             const sec = Math.round((mpk - min) * 60);
-            return `${min}:${sec.toString().padStart(2, '0')}`;
+            
+            return `${min + Math.floor(sec /60)}:${(sec % 60).toString().padStart(2, '0')}`;
         },
         showInCard: true,
         type: 'metric',
