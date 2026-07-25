@@ -33,7 +33,7 @@ export function StatsBar({ stats, group }: StatsBarProps) {
       {cards.map((card, i) => (
         <div
           key={card!.label}
-          className="flex-1 min-w-[130px] border-2 border-border p-3"
+          className="flex-1 min-w-[130px] border-2 border-border p-3 text-center"
         >
           <p className="font-mono text-xs text-text-muted uppercase tracking-tight">{card!.label}</p>
           <p className="font-mono text-xl font-bold text-text mt-0.5 tracking-tight">{card!.value}</p>
