@@ -133,6 +133,8 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
 export const APP_CONFIG: AppConfig = {
     cardClick: 'modal',
     maskedValue: '--',
+    timezone: 'Asia/Jakarta',
+    maxFetchedActivities: 200,
     modal: {
         showMinimap: true,
         maxSpeed: { state: 'show', label: 'Max Speed', unit: 'km/h' },
@@ -148,5 +150,3 @@ export const APP_CONFIG: AppConfig = {
         manual: { state: 'show', label: 'Manual', unit: '' },
     },
 };
-
-export const MAX_FETCHED_ACTIVITIES: number = 200;

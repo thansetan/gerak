@@ -1,5 +1,5 @@
 import { ThemeToggle } from './ThemeToggle'
-import { formatDateTime } from '../lib/formatters'
+import { formatDateTime, getTimezoneLabel } from '../lib/formatters'
 
 interface HeaderProps {
   syncedAt?: string
@@ -22,7 +22,7 @@ export function Header({ syncedAt, athleteName, profileUrl, activitiesCount }: H
         )}
         {syncedAt && (
           <p className="text-xs text-text-muted mt-0.5">
-            Synced {formatDateTime(syncedAt)}
+            Synced {formatDateTime(syncedAt)} {getTimezoneLabel()}
           </p>
         )}
       </div>

@@ -104,6 +104,8 @@ export interface AppConfig {
     cardClick: 'modal' | 'none'
     modal: ModalConfig
     maskedValue: string
+    timezone: string
+    maxFetchedActivities: number
 }
 
 export interface ActivitiesResponse {

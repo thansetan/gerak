@@ -1,3 +1,5 @@
+import { APP_CONFIG } from '../server/config'
+
 export function formatDistance(meters: number): string {
   const km = meters / 1000
   return `${km.toFixed(2)} km`
@@ -66,20 +68,38 @@ export function formatMaskedValue(maskedValue: string, unit?: string): string {
   return unit ? `${maskedValue} ${unit}` : maskedValue
 }
 
+const dateFmt = new Intl.DateTimeFormat('en-GB', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  timeZone: APP_CONFIG.timezone,
+})
+
+const dateTimeFmt = new Intl.DateTimeFormat('en-GB', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+  timeZone: APP_CONFIG.timezone,
+})
+
+const tzLabelFmt = new Intl.DateTimeFormat('en-US', {
+  timeZone: APP_CONFIG.timezone,
+  timeZoneName: 'shortOffset',
+})
+
+export function getTimezoneLabel(): string {
+  return tzLabelFmt.formatToParts(new Date()).find(p => p.type === 'timeZoneName')?.value ?? ''
+}
+
 export function formatDate(isoString: string): string {
-  const d = new Date(isoString)
-  const dd = d.getDate().toString().padStart(2, '0')
-  const mm = (d.getMonth() + 1).toString().padStart(2, '0')
-  const yyyy = d.getFullYear()
-  return `${dd}/${mm}/${yyyy}`
+  return dateFmt.format(new Date(isoString))
 }
 
 export function formatDateTime(isoString: string): string {
-  const d = new Date(isoString)
-  const date = formatDate(isoString)
-  const hh = d.getHours().toString().padStart(2, '0')
-  const min = d.getMinutes().toString().padStart(2, '0')
-  return `${date}, ${hh}:${min}`
+  return dateTimeFmt.format(new Date(isoString))
 }
 
 export function getGearDisplayValue(gear: { name: string; nickname?: string; brand_name?: string; model_name?: string }, mode: 'brand_model' | 'nickname' | 'full_name'): string {

@@ -61,6 +61,23 @@ describe('APP_CONFIG', () => {
     expect(APP_CONFIG.maskedValue).toBe('●●●')
   })
 
+  it('has a timezone string', () => {
+    expect(typeof APP_CONFIG.timezone).toBe('string')
+  })
+
+  it('timezone defaults to Asia/Jakarta', () => {
+    expect(APP_CONFIG.timezone).toBe('Asia/Jakarta')
+  })
+
+  it('has maxFetchedActivities as a positive number', () => {
+    expect(APP_CONFIG.maxFetchedActivities).toBeGreaterThan(0)
+    expect(Number.isInteger(APP_CONFIG.maxFetchedActivities)).toBe(true)
+  })
+
+  it('maxFetchedActivities defaults to 200', () => {
+    expect(APP_CONFIG.maxFetchedActivities).toBe(200)
+  })
+
   it('modal has all StatVisibility fields as objects', () => {
     const { modal } = APP_CONFIG
     const statFields = ['maxSpeed', 'maxPower', 'weightedPower', 'calories', 'elevRange', 'device', 'achievements'] as const
