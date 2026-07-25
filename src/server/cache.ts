@@ -38,6 +38,3 @@ export async function deleteCacheKey(key: string): Promise<void> {
   await (await getRedis()).del(key)
 }
 
-export async function getCacheKeyTtl(key: string): Promise<number> {
-  return await (await getRedis()).ttl(key)
-}

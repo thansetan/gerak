@@ -145,7 +145,3 @@ export interface StravaTokenResponse {
     refresh_token: string
 }
 
-export interface ApiError {
-    error: string
-    message: string
-}
