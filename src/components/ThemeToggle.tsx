@@ -9,9 +9,18 @@ function getInitialTheme(): boolean {
 }
 
 export function ThemeToggle() {
-  const [dark, setDark] = useState(() => getInitialTheme())
+  const [dark, setDark] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    const initial = getInitialTheme()
+    setDark(initial)
+    document.documentElement.classList.toggle('dark', initial)
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
     const toggle = () => document.documentElement.classList.toggle('dark', dark)
     if ('startViewTransition' in document) {
       document.startViewTransition(() => toggle())
@@ -19,7 +28,18 @@ export function ThemeToggle() {
       toggle()
     }
     localStorage.setItem('theme', dark ? 'dark' : 'light')
-  }, [dark])
+  }, [dark, mounted])
+
+  if (!mounted) {
+    return (
+      <button
+        disabled
+        className="font-mono text-xs font-medium tracking-tight border-2 border-border w-14 py-0.5 text-center text-text-muted"
+      >
+        THEME
+      </button>
+    )
+  }
 
   return (
     <button

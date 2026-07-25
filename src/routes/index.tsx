@@ -26,7 +26,7 @@ export const Route = createFileRoute('/')({
     group: search.group ?? undefined,
   }),
   loader: async ({ context: { queryClient } }) => {
-    await Promise.all([
+    const [activitiesData, athleteData] = await Promise.all([
       queryClient.ensureQueryData({
         queryKey: ['activities'],
         queryFn: () => getActivities(),
@@ -40,23 +40,27 @@ export const Route = createFileRoute('/')({
         queryFn: () => getGear(),
       }),
     ])
+    return { activities: activitiesData, athlete: athleteData }
   },
   component: Dashboard,
 })
 
 function Dashboard() {
   const { group: initialGroup } = Route.useSearch()
+  const loaderData = Route.useLoaderData()
   const [group, setGroup] = useState<string | null>(initialGroup ?? null)
   const [selectedActivity, setSelectedActivity] = useState<StravaActivity | null>(null)
 
   const { data: athlete } = useQuery({
     queryKey: ['athlete'],
     queryFn: () => getAthlete(),
+    initialData: loaderData?.athlete,
   })
 
-  const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
+  const { data, isPending, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['activities'],
     queryFn: () => getActivities(),
+    initialData: loaderData?.activities,
   })
 
   const activities = data?.activities ?? []
@@ -95,18 +99,21 @@ function Dashboard() {
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-6">
-      <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} activitiesCount={activities.length} />
-      {isLoading ? (
-        <LoadingSkeleton />
+      {isPending ? (
+        <>
+          <Header />
+          <LoadingSkeleton />
+        </>
       ) : (
         <>
+          <Header syncedAt={syncedAt} athleteName={athleteName} profileUrl={profileUrl} activitiesCount={activities.length} />
           <GroupFilter
             groups={groupCounts}
             active={group ?? 'all'}
             onChange={handleGroupChange}
           />
           <StatsBar stats={stats} group={group ?? 'all'} />
-          {isFetching && !isLoading && (
+          {isFetching && (
             <p className="font-mono text-xs text-text-muted mb-2 uppercase tracking-tight">Refreshing...</p>
           )}
           <ActivityList activities={filtered} onCardClick={handleCardClick} />

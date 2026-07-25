@@ -66,6 +66,22 @@ export function formatMaskedValue(maskedValue: string, unit?: string): string {
   return unit ? `${maskedValue} ${unit}` : maskedValue
 }
 
+export function formatDate(isoString: string): string {
+  const d = new Date(isoString)
+  const dd = d.getDate().toString().padStart(2, '0')
+  const mm = (d.getMonth() + 1).toString().padStart(2, '0')
+  const yyyy = d.getFullYear()
+  return `${dd}/${mm}/${yyyy}`
+}
+
+export function formatDateTime(isoString: string): string {
+  const d = new Date(isoString)
+  const date = formatDate(isoString)
+  const hh = d.getHours().toString().padStart(2, '0')
+  const min = d.getMinutes().toString().padStart(2, '0')
+  return `${date}, ${hh}:${min}`
+}
+
 export function getGearDisplayValue(gear: { name: string; nickname?: string; brand_name?: string; model_name?: string }, mode: 'brand_model' | 'nickname' | 'full_name'): string {
   switch (mode) {
     case 'brand_model':

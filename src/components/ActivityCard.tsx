@@ -2,6 +2,7 @@ import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config';
 import { getGroupForActivity } from '../lib/groups';
 import {
     formatCadence,
+    formatDate,
     formatDistance,
     formatElevation,
     formatHeartRate,
@@ -44,7 +45,7 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
                             {activity.name}
                         </h3>
                         <p className="font-mono text-xs text-text-muted mt-0.5 uppercase tracking-tight">
-                            {new Date(activity.start_date).toLocaleDateString()}
+                            {formatDate(activity.start_date)}
                         </p>
                     </div>
                     <span

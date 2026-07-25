@@ -1,4 +1,5 @@
 import { ThemeToggle } from './ThemeToggle'
+import { formatDateTime } from '../lib/formatters'
 
 interface HeaderProps {
   syncedAt?: string
@@ -21,7 +22,7 @@ export function Header({ syncedAt, athleteName, profileUrl, activitiesCount }: H
         )}
         {syncedAt && (
           <p className="text-xs text-text-muted mt-0.5">
-            Synced {new Date(syncedAt).toLocaleString()}
+            Synced {formatDateTime(syncedAt)}
           </p>
         )}
       </div>

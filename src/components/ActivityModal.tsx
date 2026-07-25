@@ -7,6 +7,7 @@ import { Minimap } from './Minimap'
 import type { StravaActivity } from '../server/types'
 import {
     formatCadence,
+    formatDateTime,
     formatDistance,
     formatDurationFull,
     formatElevation,
@@ -98,7 +99,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                             {activity.name}
                         </h2>
                         <p className="font-mono text-xs text-text-muted mt-0.5 uppercase tracking-tight">
-                            {new Date(activity.start_date).toLocaleString()}
+                            {formatDateTime(activity.start_date)}
                         </p>
                         {showAchievements && (
                             <p className="font-mono text-xs text-text-muted mt-1">
