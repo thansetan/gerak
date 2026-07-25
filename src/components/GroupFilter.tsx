@@ -20,7 +20,7 @@ export function GroupFilter({ groups, active, onChange }: GroupFilterProps) {
             key={group.name}
             onClick={() => onChange(group.name === 'all' ? null : group.name)}
             className={[
-              'font-mono text-xs font-medium px-4 py-1.5 border-t-2 border-b-2 border-l-2 last:border-r-2 border-border whitespace-nowrap cursor-pointer transition-colors duration-150',
+              'font-mono text-xs font-medium px-4 py-1.5 border-2 border-border -ml-0.5 first:ml-0 hover:relative hover:z-10 whitespace-nowrap cursor-pointer transition-colors duration-150',
               isActive
                 ? 'bg-text text-bg border-text'
                 : 'bg-transparent text-text-muted hover:bg-surface hover:border-text',

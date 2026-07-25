@@ -34,7 +34,7 @@ export function ThemeToggle() {
     return (
       <button
         disabled
-        className="font-mono text-xs font-medium tracking-tight border-2 border-border w-14 py-0.5 text-center text-text-muted"
+        className="font-mono text-xs font-medium tracking-tight border-2 border-border w-14 py-0.5 text-center bg-text text-bg"
       >
         THEME
       </button>
@@ -46,7 +46,7 @@ export function ThemeToggle() {
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={() => setDark((d) => !d)}
       className="font-mono text-xs font-medium tracking-tight border-2 border-border w-14 py-0.5 cursor-pointer
-                 text-center hover:bg-text hover:text-bg transition-colors duration-150
+                 text-center bg-text text-bg transition-colors duration-150
                  active:translate-x-px active:translate-y-px"
     >
       {dark ? 'LIGHT' : 'DARK'}
