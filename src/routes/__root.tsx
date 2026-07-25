@@ -3,6 +3,7 @@ import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from '@tanst
 import { QueryClientProvider } from '@tanstack/react-query'
 import type { QueryClient } from '@tanstack/react-query'
 import type React from 'react'
+import { NotFound } from '../components/NotFound'
 import styles from '../styles.css?url'
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -18,6 +19,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
   }),
   component: RootComponent,
+  notFoundComponent: NotFound,
   shellComponent: RootDocument,
 })
 
@@ -35,6 +37,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html>
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var c=document.documentElement.classList,t=localStorage.getItem('theme');c.toggle('dark',t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches))})()`,
+          }}
+        />
       </head>
       <body>
         <div className="min-h-[100dvh]">{children}</div>
