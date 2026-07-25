@@ -1,6 +1,7 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { exchangeAuthCode } from '../../server/auth'
+import { createServerFn, useServerFn } from '@tanstack/react-start';
+import { StravaTokenResponse } from '~/server/types';
 
 interface StravaCallbackSearch {
   code?: string
@@ -13,7 +14,50 @@ export const Route = createFileRoute('/strava/callback')({
     error: search.error ?? undefined,
   }),
   component: StravaCallback,
+  beforeLoad: async ({ search }) => {
+    const stravaRefreshToken = process.env.STRAVA_REFRESH_TOKEN;
+    if (stravaRefreshToken) {
+      throw redirect({
+        to: '/',
+      });
+    }
+    
+    if (!search.code) {
+      throw redirect({
+        to: '/strava/login',
+      })
+    }
+  }
 })
+
+const exchangeAuthCode = createServerFn({ method: 'POST' })
+  .validator((data: { code: string }) => data)
+  .handler(async ({ data }) => {
+    const clientId = process.env.STRAVA_CLIENT_ID
+    const clientSecret = process.env.STRAVA_CLIENT_SECRET
+
+    if (!clientId || !clientSecret) {
+      throw new Error('Strava credentials not configured')
+    }
+
+    const response = await fetch('https://www.strava.com/oauth/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_id: clientId,
+        client_secret: clientSecret,
+        code: data.code,
+        grant_type: 'authorization_code',
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`Strava token exchange failed: ${response.status}`)
+    }
+
+    const result = (await response.json()) as StravaTokenResponse
+    return { refresh_token: result.refresh_token }
+  })
 
 function StravaCallback() {
   const { code, error: oauthError } = Route.useSearch()
@@ -36,7 +80,8 @@ function StravaCallback() {
 
     const exchangeCode = async () => {
       try {
-        const result = await exchangeAuthCode({ code })
+        // const executeAuthCodeExchange = useServerFn(exchangeAuthCode);
+        const result = await exchangeAuthCode({data: { code }})
         setMessage(
           `Refresh token obtained: ${result.refresh_token}\n\nAdd this to your .env as STRAVA_REFRESH_TOKEN`,
         )

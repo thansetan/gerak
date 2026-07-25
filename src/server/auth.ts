@@ -5,35 +5,6 @@ import type { StravaTokenResponse } from './types'
 const TOKEN_CACHE_KEY = 'strava:access_token'
 const TOKEN_TTL = 21600
 
-export const exchangeAuthCode = createServerFn({ method: 'POST' })
-  .validator((data: { code: string }) => data)
-  .handler(async ({ data }) => {
-    const clientId = process.env.STRAVA_CLIENT_ID
-    const clientSecret = process.env.STRAVA_CLIENT_SECRET
-
-    if (!clientId || !clientSecret) {
-      throw new Error('Strava credentials not configured')
-    }
-
-    const response = await fetch('https://www.strava.com/oauth/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-        code: data.code,
-        grant_type: 'authorization_code',
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Strava token exchange failed: ${response.status}`)
-    }
-
-    const result = (await response.json()) as StravaTokenResponse
-    return { refresh_token: result.refresh_token }
-  })
-
 export async function getAccessToken(): Promise<string> {
   const cached = await getFromCache<string>(TOKEN_CACHE_KEY)
   if (cached) return cached
@@ -69,8 +40,4 @@ export async function refreshAccessToken(): Promise<string> {
   const data = (await response.json()) as StravaTokenResponse
   await setToCacheRaw(TOKEN_CACHE_KEY, data.access_token, TOKEN_TTL)
   return data.access_token
-}
-
-export async function invalidateToken(): Promise<void> {
-  await deleteCacheKey(TOKEN_CACHE_KEY)
 }

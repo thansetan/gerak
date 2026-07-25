@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StravaCallbackRouteImport } from './routes/strava/callback'
+import { Route as StravaLoginRouteImport } from './routes/strava/login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const StravaCallbackRoute = StravaCallbackRouteImport.update({
   path: '/strava/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StravaLoginRoute = StravaLoginRouteImport.update({
+  id: '/strava/login',
+  path: '/strava/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/strava/callback': typeof StravaCallbackRoute
+  '/strava/login': typeof StravaLoginRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/strava/callback': typeof StravaCallbackRoute
+  '/strava/login': typeof StravaLoginRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/strava/callback': typeof StravaCallbackRoute
+  '/strava/login': typeof StravaLoginRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/strava/callback'
+  fullPaths: '/' | '/strava/callback' | '/strava/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/strava/callback'
-  id: '__root__' | '/' | '/strava/callback'
+  to: '/' | '/strava/callback' | '/strava/login'
+  id: '__root__' | '/' | '/strava/callback' | '/strava/login'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   StravaCallbackRoute: typeof StravaCallbackRoute
+  StravaLoginRoute: typeof StravaLoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StravaCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/strava/login': {
+      id: '/strava/login'
+      path: '/strava/login'
+      fullPath: '/strava/login'
+      preLoaderRoute: typeof StravaLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   StravaCallbackRoute: StravaCallbackRoute,
+  StravaLoginRoute: StravaLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

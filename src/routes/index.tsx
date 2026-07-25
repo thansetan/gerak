@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { getActivities } from '../server/activities'
 import { getAthlete } from '../server/athlete'
@@ -43,6 +43,14 @@ export const Route = createFileRoute('/')({
     return { activities: activitiesData, athlete: athleteData }
   },
   component: Dashboard,
+  beforeLoad: async () => {
+    const stravaRefreshToken = process.env.STRAVA_REFRESH_TOKEN;
+    if (!stravaRefreshToken) {
+      throw redirect({
+        to: '/strava/login',
+      })
+    }
+  }
 })
 
 function Dashboard() {
