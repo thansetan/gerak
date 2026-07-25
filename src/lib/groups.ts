@@ -5,7 +5,7 @@ export function getGroupForActivity(sportType: string): string {
     if (group.sportTypes === null) continue
     if (group.sportTypes.length === 0) continue
     if (group.sportTypes.some((t) => t.toLowerCase() === sportType.toLowerCase())) {
-      return group.name
+      return group.name.toLowerCase()
     }
   }
   return 'other'

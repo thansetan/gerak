@@ -54,9 +54,13 @@ export const Route = createFileRoute('/')({
 })
 
 function Dashboard() {
-  const { group: initialGroup } = Route.useSearch()
+  let { group: initialGroup } = Route.useSearch()
+  initialGroup = initialGroup?.trim().toLowerCase()
+  if (!Object.keys(ACTIVITY_GROUPS).map((g) => g.trim().toLowerCase()).includes(initialGroup ?? '')) {
+    initialGroup = 'all'
+  }
   const loaderData = Route.useLoaderData()
-  const [group, setGroup] = useState<string | null>(initialGroup ?? null)
+  const [group, setGroup] = useState<string | null>(initialGroup?.toLowerCase() ?? null)
   const [selectedActivity, setSelectedActivity] = useState<StravaActivity | null>(null)
 
   const { data: athlete } = useQuery({
