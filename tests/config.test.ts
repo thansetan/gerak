@@ -1,6 +1,36 @@
 import { describe, it, expect } from 'bun:test'
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../src/server/config'
-import type { VisibilityState } from '../src/server/types'
+import type { StravaActivity } from '../src/server/types'
+
+const mockActivity: StravaActivity = {
+    id: 1,
+    name: 'Test',
+    sport_type: 'Run',
+    start_date: '2024-01-01T00:00:00Z',
+    distance: 10000,
+    moving_time: 3600,
+    elapsed_time: 3600,
+    total_elevation_gain: 100,
+    average_heartrate: 145,
+    max_heartrate: 180,
+    average_speed: 4.0,
+    max_speed: 6.0,
+    average_watts: 200,
+    max_watts: 300,
+    weighted_average_watts: 250,
+    kilojoules: 500,
+    device_watts: true,
+    has_heartrate: true,
+    elev_high: 200,
+    elev_low: 100,
+    average_cadence: 85,
+    private: false,
+    commute: false,
+    manual: false,
+    trainer: false,
+    kudos_count: 5,
+    achievement_count: 3,
+}
 
 describe('ACTIVITY_GROUPS', () => {
   it('has all required group keys', () => {
@@ -21,51 +51,54 @@ describe('ACTIVITY_GROUPS', () => {
     expect(ACTIVITY_GROUPS.other.sportTypes).toEqual([])
   })
 
-  it('each group has a visibility property', () => {
+  it('each group has a stats property', () => {
     for (const group of Object.values(ACTIVITY_GROUPS)) {
-      expect(group.visibility).toBeDefined()
-      expect(typeof group.visibility).toBe('object')
+      expect(group.stats).toBeDefined()
+      expect(typeof group.stats).toBe('object')
     }
   })
 
-  it('default visibility has both show and mask states for run group', () => {
-    const vis = ACTIVITY_GROUPS.run.visibility
-    expect(vis.distance?.state).toBe('show')
-    expect(vis.avgHeartRate?.state).toBe('mask')
-    expect(vis.maxHeartRate?.state).toBe('mask')
-    expect(vis.pace?.state).toBe('mask')
-    expect(vis.avgPower?.state).toBe('show')
+  it('default stats have show states for run group', () => {
+    const s = ACTIVITY_GROUPS.run.stats
+    expect(s.distance?.state).toBe('show')
+    expect(s.avgHeartRate?.state).toBe('show')
+    expect(s.maxHeartRate?.state).toBe('show')
+    expect(s.pace?.state).toBe('show')
+    expect(s.avgPower?.state).toBe('show')
   })
 
   it('has distance with km unit for run group', () => {
-    expect(ACTIVITY_GROUPS.run.visibility.distance.unit).toBe('km')
+    expect(ACTIVITY_GROUPS.run.stats.distance.unit).toBe('km')
   })
 
   it('metric stats have valueCalculation as a function', () => {
-    const vis = ACTIVITY_GROUPS.run.visibility
+    const s = ACTIVITY_GROUPS.run.stats
     const metricKeys = ['distance', 'avgHeartRate', 'maxHeartRate', 'pace', 'avgPower', 'cadence', 'elevation']
     for (const key of metricKeys) {
-      expect(typeof vis[key]?.valueCalculation).toBe('function')
+      expect(typeof s[key]?.valueCalculation).toBe('function')
     }
   })
 
-  it('valueCalculation for distance converts meters to kilometers', () => {
-    const calc = ACTIVITY_GROUPS.run.visibility.distance.valueCalculation!
-    expect(calc(10000)).toBe('10.00')
-    expect(calc(42195)).toBe('42.20')
-    expect(calc(0)).toBe('0.00')
+  it('valueCalculation for distance converts meters to kilometers via activity', () => {
+    const calc = ACTIVITY_GROUPS.run.stats.distance.valueCalculation
+    const act10k = { ...mockActivity, distance: 10000 }
+    const act42k = { ...mockActivity, distance: 42195 }
+    const act0 = { ...mockActivity, distance: 0 }
+    expect(calc(act10k)).toBe('10.00')
+    expect(calc(act42k)).toBe('42.20')
+    expect(calc(act0)).toBeNull()
   })
 
   it('shows speed and hides pace for bike group', () => {
-    expect(ACTIVITY_GROUPS.bike.visibility.speed.state).toBe('show')
-    expect(ACTIVITY_GROUPS.bike.visibility.speed.unit).toBe('km/h')
-    expect(ACTIVITY_GROUPS.bike.visibility.pace.state).toBe('hide')
+    expect(ACTIVITY_GROUPS.bike.stats.speed.state).toBe('show')
+    expect(ACTIVITY_GROUPS.bike.stats.speed.unit).toBe('km/h')
+    expect(ACTIVITY_GROUPS.bike.stats.pace.state).toBe('hide')
   })
 
-  it('hides total distance and elevation for badminton, strength, and other', () => {
+  it('hides stats bar distance and elevation for badminton, strength, and other', () => {
     for (const key of ['badminton', 'strength', 'other']) {
-      expect(ACTIVITY_GROUPS[key].visibility.totalDistance.state).toBe('hide')
-      expect(ACTIVITY_GROUPS[key].visibility.totalElevation.state).toBe('hide')
+      expect(ACTIVITY_GROUPS[key].statsBarConfig?.totalDistance?.state).toBe('hide')
+      expect(ACTIVITY_GROUPS[key].statsBarConfig?.totalElevation?.state).toBe('hide')
     }
   })
 })
@@ -96,65 +129,47 @@ describe('APP_CONFIG', () => {
     expect(APP_CONFIG.maxFetchedActivities).toBe(200)
   })
 
-  it('modal has all StatConfig fields as objects', () => {
-    const { modal } = APP_CONFIG
-    const statFields = ['maxSpeed', 'maxPower', 'weightedPower', 'calories', 'elevRange', 'device', 'achievements'] as const
-    for (const field of statFields) {
-      expect(typeof modal[field]).toBe('object')
-      expect(modal[field]).toHaveProperty('state')
-      expect(modal[field]).toHaveProperty('label')
-      expect(modal[field]).toHaveProperty('unit')
-    }
+  it('modalHeader has boolean toggle fields', () => {
+    const { modalHeader } = APP_CONFIG
+    expect(typeof modalHeader.showMinimap).toBe('boolean')
+    expect(typeof modalHeader.showTitle).toBe('boolean')
+    expect(typeof modalHeader.showActivityTime).toBe('boolean')
+    expect(typeof modalHeader.showAchievements).toBe('boolean')
+    expect(typeof modalHeader.showKudos).toBe('boolean')
   })
 
-  it('modal is a boolean', () => {
-    expect(typeof APP_CONFIG.modal.showMinimap).toBe('boolean')
+  it('modalHeader defaults to true for all toggles', () => {
+    const { modalHeader } = APP_CONFIG
+    expect(modalHeader.showMinimap).toBe(true)
+    expect(modalHeader.showTitle).toBe(true)
+    expect(modalHeader.showActivityTime).toBe(true)
+    expect(modalHeader.showAchievements).toBe(true)
+    expect(modalHeader.showKudos).toBe(true)
   })
 
-  it('modal has activity flag fields', () => {
-    const { modal } = APP_CONFIG
-    const flagFields = ['private', 'commute', 'trainer', 'manual'] as const
-    for (const field of flagFields) {
-      expect(modal[field]).toBeDefined()
-      expect(typeof modal[field].state).toBe('string')
-      expect(typeof modal[field].label).toBe('string')
-    }
+  it('statsBar has all four aggregate entries with state show', () => {
+    const { statsBar } = APP_CONFIG
+    expect(statsBar.totalDistance.state).toBe('show')
+    expect(statsBar.totalDuration.state).toBe('show')
+    expect(statsBar.totalElevation.state).toBe('show')
+    expect(statsBar.activeDays.state).toBe('show')
   })
 
-  it('modal flag fields allow show/hide only for mask', () => {
-    const { modal } = APP_CONFIG
-    const flagFields = ['private', 'commute', 'trainer', 'manual'] as const
-    for (const field of flagFields) {
-      expect(modal[field].state).toMatch(/^(show|hide)$/)
-    }
+  it('statsBar entries have valueCalculation functions', () => {
+    const { statsBar } = APP_CONFIG
+    expect(typeof statsBar.totalDistance.valueCalculation).toBe('function')
+    expect(typeof statsBar.totalDuration.valueCalculation).toBe('function')
+    expect(typeof statsBar.totalElevation.valueCalculation).toBe('function')
+    expect(typeof statsBar.activeDays.valueCalculation).toBe('function')
   })
 
-  it('modal metric fields default to show, calories defaults to hide', () => {
-    const { modal } = APP_CONFIG
-    expect(modal.maxSpeed.state).toBe('show')
-    expect(modal.maxPower.state).toBe('show')
-    expect(modal.weightedPower.state).toBe('show')
-    expect(modal.calories.state).toBe('hide')
-    expect(modal.elevRange.state).toBe('show')
-    expect(modal.device.state).toBe('show')
-    expect(modal.achievements.state).toBe('show')
+  it('statsBar valueCalculation formats distance', () => {
+    expect(APP_CONFIG.statsBar.totalDistance.valueCalculation(42195)).toBe('42.20')
   })
 
-  it('maxSpeed has km/h unit', () => {
-    expect(APP_CONFIG.modal.maxSpeed.unit).toBe('km/h')
-  })
-
-  it('maxPower and weightedPower have W unit', () => {
-    expect(APP_CONFIG.modal.maxPower.unit).toBe('W')
-    expect(APP_CONFIG.modal.weightedPower.unit).toBe('W')
-  })
-
-  it('calories has kJ unit', () => {
-    expect(APP_CONFIG.modal.calories.unit).toBe('kJ')
-  })
-
-  it('elevRange has m unit', () => {
-    expect(APP_CONFIG.modal.elevRange.unit).toBe('m')
+  it('statsBar valueCalculation formats duration', () => {
+    expect(APP_CONFIG.statsBar.totalDuration.valueCalculation(5400)).toBe('1h 30m')
+    expect(APP_CONFIG.statsBar.totalDuration.valueCalculation(1800)).toBe('30m')
   })
 
   it('gear config exists on each group with state, label, and value', () => {

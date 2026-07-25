@@ -1,5 +1,5 @@
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
-import { formatDistance, formatDuration, formatElevation } from '../lib/formatters'
+import type { StatsBarConfig, StatsBarStatConfig } from '../server/types'
 
 interface AggregateStats {
   totalDistance: number
@@ -13,19 +13,26 @@ interface StatsBarProps {
   group: string
 }
 
-export function StatsBar({ stats, group }: StatsBarProps) {
-  const visibility = ACTIVITY_GROUPS[group]?.visibility
+function statCard(stat: StatsBarStatConfig, value: number) {
+  if (stat.state === 'hide') return null
+  if (stat.state === 'mask') return { label: stat.label, value: `${APP_CONFIG.maskedValue}${stat.unit ? ` ${stat.unit}` : ''}` }
+  return { label: stat.label, value: `${stat.valueCalculation(value)}${stat.unit ? ` ${stat.unit}` : ''}` }
+}
 
-  function statCard(stat: { state: string; label: string; unit: string } | undefined, formatted: string) {
-    if (!stat || stat.state === 'hide') return null
-    return { label: stat.label, value: stat.state === 'mask' ? `${APP_CONFIG.maskedValue} ${stat.unit}` : formatted }
-  }
+export function StatsBar({ stats, group }: StatsBarProps) {
+  const groupConfig = ACTIVITY_GROUPS[group]
+  const barConfig = Object.fromEntries(
+    Object.entries(APP_CONFIG.statsBar).map(([key, defaultConfig]) => [
+      key,
+      { ...defaultConfig, ...groupConfig?.statsBarConfig?.[key as keyof StatsBarConfig] },
+    ])
+  ) as StatsBarConfig
 
   const cards = [
-    statCard(visibility?.totalDistance, formatDistance(stats.totalDistance)),
-    statCard(visibility?.totalDuration, formatDuration(stats.totalDuration)),
-    statCard(visibility?.totalElevation, formatElevation(stats.totalElevation)),
-    statCard(visibility?.activeDays, `${stats.activeDays}`),
+    statCard(barConfig.totalDistance, stats.totalDistance),
+    statCard(barConfig.totalDuration, stats.totalDuration),
+    statCard(barConfig.totalElevation, stats.totalElevation),
+    statCard(barConfig.activeDays, stats.activeDays),
   ].filter(c => c != null)
 
   return (

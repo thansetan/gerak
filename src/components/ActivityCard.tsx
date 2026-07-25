@@ -8,21 +8,19 @@ interface ActivityCardProps {
     onClick?: () => void;
 }
 
+function renderCardStat(stat: StatConfig, activity: StravaActivity) {
+    if (stat.state === 'hide') return null
+    if (stat.state === 'mask') return <Metric label={stat.label} value={`${APP_CONFIG.maskedValue}${stat.unit ? ` ${stat.unit}` : ''}`} />
+    const calc = stat.valueCalculation(activity)
+    if (calc == null) return null
+    return <Metric label={stat.label} value={`${calc}${stat.unit ? ` ${stat.unit}` : ''}`} />
+}
+
 export function ActivityCard({ activity, onClick }: ActivityCardProps) {
     const group = getGroupForActivity(activity.sport_type)
     const groupConfig = ACTIVITY_GROUPS[group]
-    const statsVisibility = groupConfig.visibility
+    const stats = groupConfig.stats
     const color = groupConfig.color
-
-    function renderStat(stat: StatConfig | undefined, condition: boolean, rawValue: any) {
-        if (!stat || stat.state === 'hide') return null
-        if (stat.state === 'mask') return <Metric label={stat.label} value={`${APP_CONFIG.maskedValue} ${stat.unit}`} />
-        if (condition) {
-            const calculated = stat.valueCalculation?.(rawValue) ?? ''
-            return <Metric label={stat.label} value={`${calculated} ${stat.unit}`} />
-        }
-        return null
-    }
 
     return (
         <div
@@ -51,14 +49,13 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
                     </span>
                 </div>
                 <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-                    {renderStat(statsVisibility.distance, activity.distance > 0, activity.distance)}
-                    {renderStat(statsVisibility.avgHeartRate, !!activity.average_heartrate, activity.average_heartrate)}
-                    {renderStat(statsVisibility.maxHeartRate, !!activity.max_heartrate, activity.max_heartrate)}
-                    {renderStat(statsVisibility.speed, activity.average_speed > 0, activity.average_speed)}
-                    {renderStat(statsVisibility.pace, activity.average_speed > 0, activity.average_speed)}
-                    {renderStat(statsVisibility.avgPower, !!activity.average_watts, activity.average_watts)}
-                    {renderStat(statsVisibility.cadence, !!activity.average_cadence, activity.average_cadence)}
-                    {renderStat(statsVisibility.elevation, activity.total_elevation_gain > 0, activity.total_elevation_gain)}
+                    {Object.entries(stats)
+                        .filter(([_, s]) => s.showInCard)
+                        .map(([key, stat]) => {
+                            const node = renderCardStat(stat, activity)
+                            if (!node) return null
+                            return <div key={key}>{node}</div>
+                        })}
                 </div>
             </div>
         </div>

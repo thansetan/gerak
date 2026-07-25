@@ -46,40 +46,56 @@ export interface StatConfig {
     state: VisibilityState
     label: string
     unit: string
-    valueCalculation?: (value: any) => string
+    valueCalculation: (activity: StravaActivity) => string | null
+    showInCard: boolean
+    type: 'metric' | 'detail'
+    highlightInModal: boolean
+    renderAs?: 'row' | 'tag'
 }
 
 export type StatsConfig = Record<string, StatConfig>
+
+export interface StatsBarStatConfig {
+    state: VisibilityState
+    label: string
+    unit: string
+    valueCalculation: (value: number) => string
+}
+
+export interface StatsBarConfig {
+    totalDistance: StatsBarStatConfig
+    totalDuration: StatsBarStatConfig
+    totalElevation: StatsBarStatConfig
+    activeDays: StatsBarStatConfig
+}
 
 export interface ActivityGroupColor {
     accent: string
     bg: string
 }
 
+export type PartialStatsBarConfig = {
+    [K in keyof StatsBarConfig]?: Partial<StatsBarConfig[K]>
+}
+
 export interface ActivityGroup {
     name: string
     label: string
     sportTypes: string[] | null
-    visibility: StatsConfig
+    stats: StatsConfig
     color: ActivityGroupColor
     cardClick: 'modal' | 'none'
     gearConfig?: GearConfig
+    statsBarConfig?: PartialStatsBarConfig
     modalConfig?: Partial<ModalConfig>
 }
 
 export interface ModalConfig {
     showMinimap: boolean
-    maxSpeed: StatConfig
-    maxPower: StatConfig
-    weightedPower: StatConfig
-    calories: StatConfig
-    elevRange: StatConfig
-    device: StatConfig
-    achievements: StatConfig
-    private: StatConfig
-    commute: StatConfig
-    trainer: StatConfig
-    manual: StatConfig
+    showTitle: boolean
+    showActivityTime: boolean
+    showAchievements: boolean
+    showKudos: boolean
 }
 
 export type GearValueDisplay = 'brand_model' | 'nickname' | 'full_name'
@@ -103,7 +119,8 @@ export interface GearConfig {
 
 export interface AppConfig {
     cardClick: 'modal' | 'none'
-    modal: ModalConfig
+    modalHeader: ModalConfig
+    statsBar: StatsBarConfig
     maskedValue: string
     timezone: string
     maxFetchedActivities: number
