@@ -81,6 +81,10 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
             return s.valueCalculation(activity) != null
         })
 
+    const showMinimap = !!(activity.map?.summary_polyline && modalHeader.showMinimap)
+    const contentBeforeMetrics = showMinimap || heroStats.length > 0
+    const contentBeforeDetails = contentBeforeMetrics || hasAnyMetrics
+
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -141,7 +145,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                 </div>
 
                 <div className="p-5 pt-4 space-y-4">
-                    {activity.map?.summary_polyline && modalHeader.showMinimap && (
+                    {showMinimap && (
                         <Minimap
                             summaryPolyline={activity.map.summary_polyline}
                             accentColor={colors.accent}
@@ -164,7 +168,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                     )}
 
                     {hasAnyMetrics && (
-                        <div className="border-t-2 border-border pt-4">
+                        <div className={'pt-4' + (contentBeforeMetrics ? ' border-t-2 border-border' : '')}>
                             <h3 className="font-mono text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
                                 Metrics
                             </h3>
@@ -186,7 +190,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                     )}
 
                     {hasAnyDetails && (
-                        <div className="border-t-2 border-border pt-4">
+                        <div className={'pt-4' + (contentBeforeDetails ? ' border-t-2 border-border' : '')}>
                             <h3 className="font-mono text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
                                 Details
                             </h3>
