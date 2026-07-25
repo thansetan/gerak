@@ -218,9 +218,9 @@ const DEFAULT_STATS_BAR: StatsBarConfig = {
     },
     activeDays: {
         state: 'show',
-        label: 'Days',
+        label: 'Active Days',
         unit: '',
-        valueCalculation: (v) => Math.round(v).toString(),
+        valueCalculation: (v) => `${v} day${v !== 1 ? 's' : ''}`,
     },
 };
 
