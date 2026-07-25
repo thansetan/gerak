@@ -115,14 +115,16 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                                 {formatDateTime(activity.start_date)} {getTimezoneLabel()}
                             </p>
                         )}
-                        {modalHeader.showAchievements && (
+                        {(modalHeader.showAchievements || modalHeader.showKudos) && (
                             <p className="font-mono text-xs text-text-muted mt-1">
-                                {activity.achievement_count ?? 0} achievements
+                                {modalHeader.showAchievements && (
+                                    <>{activity.achievement_count ?? 0} achievements</>
+                                )}
+                                {modalHeader.showAchievements && modalHeader.showKudos && (
+                                    <span className="mx-1.5">&middot;</span>
+                                )}
                                 {modalHeader.showKudos && (
-                                    <>
-                                        <span className="mx-1.5">&middot;</span>
-                                        {activity.kudos_count ?? 0} kudos
-                                    </>
+                                    <>{activity.kudos_count ?? 0} kudos</>
                                 )}
                             </p>
                         )}
