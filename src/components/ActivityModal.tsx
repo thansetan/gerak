@@ -4,7 +4,6 @@ import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
 import { getGear } from '../server/gear'
 import { getGroupForActivity } from '../lib/groups'
 import { Minimap } from './Minimap'
-import { SPORT_COLORS } from '../lib/colors'
 import type { StravaActivity } from '../server/types'
 import {
     formatCadence,
@@ -31,7 +30,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const vis = groupConfig.visibility
     const { data: gearMap } = useQuery({ queryKey: ['gear'], queryFn: () => getGear(), staleTime: Infinity })
     const gearDetail = gearMap?.[activity.gear_id ?? '']
-    const colors = SPORT_COLORS[group] ?? SPORT_COLORS.other
+    const colors = groupConfig.color
 
     const ref = useRef<HTMLDivElement>(null)
     const [closing, setClosing] = useState(false)

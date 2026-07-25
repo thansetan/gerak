@@ -50,11 +50,17 @@ export interface StatVisibility {
 
 export type StatsVisibility = Record<string, StatVisibility>
 
+export interface ActivityGroupColor {
+    accent: string
+    bg: string
+}
+
 export interface ActivityGroup {
     name: string
     label: string
     sportTypes: string[] | null
     visibility: StatsVisibility
+    color: ActivityGroupColor
     cardClick: 'modal' | 'none'
     gearConfig?: GearConfig
     modalConfig?: Partial<ModalConfig>

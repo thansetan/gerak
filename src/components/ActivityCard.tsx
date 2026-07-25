@@ -8,7 +8,6 @@ import {
     formatPace,
     formatSpeed,
 } from '../lib/formatters';
-import { SPORT_COLORS } from '../lib/colors';
 import type { StatVisibility, StravaActivity } from '../server/types';
 
 interface ActivityCardProps {
@@ -20,7 +19,7 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
     const group = getGroupForActivity(activity.sport_type)
     const groupConfig = ACTIVITY_GROUPS[group]
     const statsVisibility = groupConfig.visibility
-    const color = SPORT_COLORS[group] ?? SPORT_COLORS.other
+    const color = groupConfig.color
 
     function renderStat(stat: StatVisibility | undefined, condition: boolean, formatted: string) {
         if (!stat || stat.state === 'hide') return null
