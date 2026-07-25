@@ -9,6 +9,7 @@ import {
     formatCadence,
     formatDateTime,
     formatDistance,
+    getTimezoneLabel,
     formatDurationFull,
     formatElevation,
     formatHeartRate,
@@ -99,7 +100,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                             {activity.name}
                         </h2>
                         <p className="font-mono text-xs text-text-muted mt-0.5 uppercase tracking-tight">
-                            {formatDateTime(activity.start_date)}
+                            {formatDateTime(activity.start_date)} {getTimezoneLabel()}
                         </p>
                         {showAchievements && (
                             <p className="font-mono text-xs text-text-muted mt-1">
