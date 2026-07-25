@@ -150,33 +150,17 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                     )}
 
                     {heroStats.length > 0 && (
-                        (() => {
-                            const rows: { label: string; value: string }[][] = []
-                            for (let i = 0; i < heroStats.length; i += 3) {
-                                rows.push(heroStats.slice(i, i + 3))
-                            }
-                            return (
-                                <div className="border-2 border-border">
-                                    {rows.map((row, rowIdx) => (
-                                        <div
-                                            key={rowIdx}
-                                            className={`grid ${rowIdx < rows.length - 1 ? 'border-b-2 border-border' : ''}`}
-                                            style={{ gridTemplateColumns: `repeat(${row.length}, 1fr)` }}
-                                        >
-                                            {row.map((s, colIdx) => (
-                                                <div
-                                                    key={s.label}
-                                                    className={`p-3 text-center ${colIdx < row.length - 1 ? 'border-r-2 border-border' : ''}`}
-                                                >
-                                                    <p className="font-mono text-lg font-bold text-text tabular-nums" style={{ color: colors.accent }}>{s.value}</p>
-                                                    <p className="font-mono text-[10px] text-text-muted uppercase tracking-tight mt-0.5">{s.label}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ))}
+                        <div className="flex flex-wrap">
+                            {heroStats.map((s) => (
+                                <div
+                                    key={s.label}
+                                    className="flex-1 min-w-[130px] border-2 border-border p-3 text-center"
+                                >
+                                    <p className="font-mono text-lg font-bold text-text tabular-nums" style={{ color: colors.accent }}>{s.value}</p>
+                                    <p className="font-mono text-[10px] text-text-muted uppercase tracking-tight mt-0.5">{s.label}</p>
                                 </div>
-                            )
-                        })()
+                            ))}
+                        </div>
                     )}
 
                     {hasAnyMetrics && (
