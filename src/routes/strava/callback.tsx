@@ -1,7 +1,6 @@
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { createServerFn, useServerFn } from '@tanstack/react-start';
-import { StravaTokenResponse } from '~/server/types';
+import { exchangeAuthCode, isAuthenticated } from '../../server/stravaAuth';
 
 interface StravaCallbackSearch {
   code?: string
@@ -15,8 +14,8 @@ export const Route = createFileRoute('/strava/callback')({
   }),
   component: StravaCallback,
   beforeLoad: async ({ search }) => {
-    const stravaRefreshToken = process.env.STRAVA_REFRESH_TOKEN;
-    if (stravaRefreshToken) {
+    const authenticated = await isAuthenticated()
+    if (authenticated) {
       throw redirect({
         to: '/',
       });
@@ -29,35 +28,6 @@ export const Route = createFileRoute('/strava/callback')({
     }
   }
 })
-
-const exchangeAuthCode = createServerFn({ method: 'POST' })
-  .validator((data: { code: string }) => data)
-  .handler(async ({ data }) => {
-    const clientId = process.env.STRAVA_CLIENT_ID
-    const clientSecret = process.env.STRAVA_CLIENT_SECRET
-
-    if (!clientId || !clientSecret) {
-      throw new Error('Strava credentials not configured')
-    }
-
-    const response = await fetch('https://www.strava.com/oauth/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-        code: data.code,
-        grant_type: 'authorization_code',
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Strava token exchange failed: ${response.status}`)
-    }
-
-    const result = (await response.json()) as StravaTokenResponse
-    return { refresh_token: result.refresh_token }
-  })
 
 function StravaCallback() {
   const { code, error: oauthError } = Route.useSearch()

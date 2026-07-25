@@ -14,7 +14,9 @@ export function NotFound() {
           The page you're looking for doesn't exist or has been moved.
         </p>
         <button
-          onClick={() => navigate({ to: '/' })}
+          onClick={() => {
+            return navigate({ to: '/' });
+          }}
           className="mt-8 font-mono text-xs font-medium uppercase tracking-tight border-2 border-border px-5 py-2 cursor-pointer hover:bg-text hover:text-bg transition-colors duration-150"
         >
           Go Home

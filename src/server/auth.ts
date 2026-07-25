@@ -1,4 +1,3 @@
-import { createServerFn } from '@tanstack/react-start'
 import { getFromCache, setToCacheRaw, deleteCacheKey } from './cache'
 import type { StravaTokenResponse } from './types'
 
@@ -41,3 +40,4 @@ export async function refreshAccessToken(): Promise<string> {
   await setToCacheRaw(TOKEN_CACHE_KEY, data.access_token, TOKEN_TTL)
   return data.access_token
 }
+

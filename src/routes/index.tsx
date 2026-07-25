@@ -16,6 +16,7 @@ import { LoadingSkeleton } from '../components/LoadingSkeleton'
 import { getGroupForActivity } from '../lib/groups'
 import { useFilteredActivities, useGroupCounts, useAggregateStats } from '../lib/useFilteredActivities'
 import type { StravaActivity } from '../server/types'
+import { isAuthenticated } from '../server/stravaAuth'
 
 interface DashboardSearch {
   group?: string
@@ -44,8 +45,8 @@ export const Route = createFileRoute('/')({
   },
   component: Dashboard,
   beforeLoad: async () => {
-    const stravaRefreshToken = process.env.STRAVA_REFRESH_TOKEN;
-    if (!stravaRefreshToken) {
+    const authenticated = await isAuthenticated()
+    if (!authenticated) {
       throw redirect({
         to: '/strava/login',
       })
