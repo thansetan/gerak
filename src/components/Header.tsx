@@ -12,7 +12,7 @@ interface HeaderProps {
 export function Header({ syncedAt, athleteName, profileUrl, activitiesCount, fetchWindowStart }: HeaderProps) {
   return (
     <header className="flex items-center justify-between border-b-2 border-border pb-4 mb-8">
-      <div>
+      <div className="max-w-60 md:max-w-none">
         <h1 className="text-2xl font-bold tracking-tighter text-text font-mono">
           berGERAK
         </h1>
@@ -27,7 +27,7 @@ export function Header({ syncedAt, athleteName, profileUrl, activitiesCount, fet
           </p>
         )}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         {profileUrl && (
           <img
             src={profileUrl}
