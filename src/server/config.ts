@@ -5,7 +5,7 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Distance',
         unit: 'km',
-        valueCalculation: (a) => a.distance > 0 ? (a.distance / 1000).toFixed(2) : null,
+        valueCalculation: (a) => a.distance > 0 ? (Math.floor(a.distance / 1000 * 100) / 100).toFixed(2) : null,
         showInCard: true,
         type: 'metric',
         highlightInModal: true,
