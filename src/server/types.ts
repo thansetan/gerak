@@ -134,6 +134,7 @@ export interface ActivitiesResponse {
 }
 
 export interface AthleteProfile {
+    id: number
     firstname: string
     lastname: string
     profile: string

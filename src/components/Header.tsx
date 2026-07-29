@@ -1,15 +1,16 @@
 import { ThemeToggle } from './ThemeToggle'
 import { formatDate, formatDateTime, getTimezoneLabel } from '../lib/formatters'
+import { AthleteProfile } from '~/server/types';
 
 interface HeaderProps {
   syncedAt?: string
-  athleteName?: string
-  profileUrl?: string
   activitiesCount?: number
   fetchWindowStart?: string
+  athlete?: AthleteProfile
 }
 
-export function Header({ syncedAt, athleteName, profileUrl, activitiesCount, fetchWindowStart }: HeaderProps) {
+export function Header({ syncedAt, athlete, activitiesCount, fetchWindowStart }: HeaderProps) {
+  const athleteName = athlete ? `${athlete.firstname} ${athlete.lastname}` : undefined
   return (
     <header className="flex items-center justify-between border-b-2 border-border pb-4 mb-8">
       <div className="max-w-60 md:max-w-none">
@@ -28,13 +29,15 @@ export function Header({ syncedAt, athleteName, profileUrl, activitiesCount, fet
         )}
       </div>
       <div className="flex items-center gap-2 md:gap-4">
-        {profileUrl && (
-          <img
-            src={profileUrl}
-            alt={athleteName ?? 'Profile'}
-            className="w-12 h-12 border-2 border-border object-cover"
-            style={{ borderRadius: 0 }}
-          />
+        {athlete?.profile && (
+          <a href={`https://strava.com/athletes/${athlete.id}`} target="_blank" className="cursor-pointer">
+            <img
+              src={athlete.profile}
+              alt={athleteName}
+              className="w-12 h-12 border-2 border-border object-cover"
+              style={{ borderRadius: 0 }}
+              />
+          </a>
         )}
         <ThemeToggle />
       </div>
