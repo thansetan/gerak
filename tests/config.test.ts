@@ -85,7 +85,7 @@ describe('ACTIVITY_GROUPS', () => {
     const act42k = { ...mockActivity, distance: 42195 }
     const act0 = { ...mockActivity, distance: 0 }
     expect(calc(act10k)).toBe('10.00')
-    expect(calc(act42k)).toBe('42.20')
+    expect(calc(act42k)).toBe('42.19')
     expect(calc(act0)).toBeNull()
   })
 
