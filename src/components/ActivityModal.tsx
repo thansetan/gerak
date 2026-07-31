@@ -147,8 +147,9 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                 </div>
 
                 <div className="p-5 pt-4 space-y-4">
-                    {showMinimap && (
+                    {activity.map?.summary_polyline && modalHeader.showMinimap && (
                         <Minimap
+                            key={activity.map.summary_polyline}
                             summaryPolyline={activity.map.summary_polyline}
                             accentColor={colors.accent}
                             bgColor={colors.bg}
