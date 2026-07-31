@@ -326,6 +326,7 @@ export const APP_CONFIG: AppConfig = {
     maxFetchedActivities: 200,
     modalHeader: {
         showMinimap: true,
+        minimapAnimation: true,
         showTitle: true,
         showActivityTime: true,
         showAchievements: true,

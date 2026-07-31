@@ -6,6 +6,8 @@ interface MinimapProps {
   summaryPolyline: string
   accentColor: string
   bgColor: string
+  skipAnimation?: boolean
+  onAnimationComplete?: () => void
 }
 
 function approximateDistance(path: [number, number][]): number {
@@ -26,7 +28,7 @@ function approximateDistance(path: [number, number][]): number {
   return total
 }
 
-export function Minimap({ summaryPolyline, accentColor, bgColor }: MinimapProps) {
+export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation = false, onAnimationComplete }: MinimapProps) {
   const path = useMemo(() => decodePolyline(summaryPolyline), [summaryPolyline])
 
   if (path.length < 2) return null
@@ -74,6 +76,8 @@ export function Minimap({ summaryPolyline, accentColor, bgColor }: MinimapProps)
   const arrowAngle = useMotionValue(0)
 
   useLayoutEffect(() => {
+    if (skipAnimation) return
+
     setShowEnd(false)
     arrowX.set(startX)
     arrowY.set(startY)
@@ -93,11 +97,14 @@ export function Minimap({ summaryPolyline, accentColor, bgColor }: MinimapProps)
         const angle = Math.atan2(ahead.y - p.y, ahead.x - p.x) * (180 / Math.PI)
         arrowAngle.set(angle)
       },
-      onComplete: () => setShowEnd(true),
+      onComplete: () => {
+        setShowEnd(true)
+        onAnimationComplete?.()
+      },
     })
 
     return () => controls.stop()
-  }, [summaryPolyline, startX, startY, duration])
+  }, [skipAnimation, onAnimationComplete, summaryPolyline, startX, startY, duration])
 
   const arrowSize = maxDim * 0.012
 
@@ -118,9 +125,9 @@ export function Minimap({ summaryPolyline, accentColor, bgColor }: MinimapProps)
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.9}
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration, ease: 'easeOut' }}
+          initial={skipAnimation ? undefined : { pathLength: 0 }}
+          animate={skipAnimation ? undefined : { pathLength: 1 }}
+          transition={skipAnimation ? undefined : { duration, ease: 'easeOut' }}
         />
         {!showEnd && (
         <motion.g
