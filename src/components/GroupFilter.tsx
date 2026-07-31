@@ -24,7 +24,7 @@ export function GroupFilter({ groups, active, onChange }: GroupFilterProps) {
                 key={group.name}
                 onClick={() => onChange(group.name === 'all' ? null : group.name)}
                 className={[
-                  'relative font-mono text-xs font-medium px-4 py-1.5 border-2 border-border -ml-0.5 first:ml-0 hover:z-10 whitespace-nowrap cursor-pointer transition-colors duration-150',
+                  'relative font-mono text-xs font-medium px-4 py-2 min-h-11 border-2 border-border -ml-0.5 first:ml-0 hover:z-10 whitespace-nowrap cursor-pointer transition-colors duration-75',
                   isActive
                     ? 'bg-text text-bg border-text z-10'
                     : 'text-text-muted hover:bg-surface hover:border-text',
