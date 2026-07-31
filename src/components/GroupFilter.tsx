@@ -16,7 +16,7 @@ export function GroupFilter({ groups, active, onChange }: GroupFilterProps) {
   return (
     <div className="flex justify-center pb-4 mb-6">
       <LayoutGroup>
-                <div className="flex gap-0 overflow-x-auto max-w-full">
+                <div className="flex gap-0 overflow-x-auto max-w-full scrollbar-none">
           {groups.filter(g => g.name === 'all' || g.count > 0).map((group) => {
             const isActive = group.name === (active ?? 'all')
             return (
