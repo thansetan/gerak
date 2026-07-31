@@ -84,7 +84,6 @@ export function StatsBar({ stats, group }: StatsBarProps) {
 
   return (
     <motion.div
-      key={group}
       className="flex flex-wrap mb-6"
       variants={containerVariants}
       initial="hidden"

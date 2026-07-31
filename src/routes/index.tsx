@@ -130,7 +130,7 @@ function Dashboard() {
           {isFetching && (
             <p className="font-mono text-xs text-text-muted mb-2 uppercase tracking-tight">Refreshing...</p>
           )}
-          <ActivityList key={group ?? 'all'} activities={filtered} onCardClick={handleCardClick} />
+          <ActivityList activities={filtered} onCardClick={handleCardClick} />
         </>
       )}
       <AnimatePresence>
