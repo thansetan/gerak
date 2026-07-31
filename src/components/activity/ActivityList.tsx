@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import type { StravaActivity } from '../../shared/types'
 import { ActivityCard } from './ActivityCard'
 
@@ -24,18 +24,24 @@ export function ActivityList({ activities, onCardClick }: ActivityListProps) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
-      {activities.map((activity) => (
-        <motion.div
-          key={activity.id}
-          layout
-          className="h-full"
-        >
-          <ActivityCard
-            activity={activity}
-            onClick={onCardClick ? () => onCardClick(activity) : undefined}
-          />
-        </motion.div>
-      ))}
+      <AnimatePresence mode="popLayout">
+        {activities.map((activity) => (
+          <motion.div
+            key={activity.id}
+            layout
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+            className="h-full"
+          >
+            <ActivityCard
+              activity={activity}
+              onClick={onCardClick ? () => onCardClick(activity) : undefined}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </motion.div>
   )
 }
