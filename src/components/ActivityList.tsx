@@ -1,29 +1,10 @@
 import { motion } from 'framer-motion'
-import type { Variants } from 'framer-motion'
 import type { StravaActivity } from '../server/types'
 import { ActivityCard } from './ActivityCard'
 
 interface ActivityListProps {
   activities: StravaActivity[]
   onCardClick?: (activity: StravaActivity) => void
-}
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.04,
-    },
-  },
-}
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { type: 'spring', stiffness: 300, damping: 24 },
-  },
 }
 
 export function ActivityList({ activities, onCardClick }: ActivityListProps) {
@@ -39,14 +20,13 @@ export function ActivityList({ activities, onCardClick }: ActivityListProps) {
   return (
     <motion.div
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       {activities.map((activity) => (
         <motion.div
           key={activity.id}
-          variants={itemVariants}
           layout
           className="h-full"
         >
