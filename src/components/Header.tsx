@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { ThemeToggle } from './ThemeToggle'
 import { formatDate, formatDateTime, getTimezoneLabel } from '../lib/formatters'
 import { AthleteProfile } from '~/server/types';
@@ -12,7 +13,12 @@ interface HeaderProps {
 export function Header({ syncedAt, athlete, activitiesCount, fetchWindowStart }: HeaderProps) {
   const athleteName = athlete ? `${athlete.firstname} ${athlete.lastname}` : undefined
   return (
-    <header className="flex items-center justify-between border-b-2 border-border pb-4 mb-8">
+    <motion.header
+      className="flex items-center justify-between border-b-2 border-border pb-4 mb-8"
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
       <div className="max-w-60 md:max-w-none">
         <h1 className="text-2xl font-bold tracking-tighter text-text font-mono">
           berGERAK
@@ -41,6 +47,6 @@ export function Header({ syncedAt, athlete, activitiesCount, fetchWindowStart }:
         )}
         <ThemeToggle />
       </div>
-    </header>
+    </motion.header>
   )
 }

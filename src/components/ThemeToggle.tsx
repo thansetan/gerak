@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 function getInitialTheme(): boolean {
   if (typeof document === 'undefined') return false
@@ -42,14 +43,14 @@ export function ThemeToggle() {
   }
 
   return (
-    <button
+    <motion.button
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={() => setDark((d) => !d)}
       className="font-mono text-xs font-medium tracking-tight border-2 border-border w-14 py-0.5 cursor-pointer
-                 text-center bg-text text-bg transition-colors duration-150
-                 active:translate-x-px active:translate-y-px"
+                 text-center bg-text text-bg transition-colors duration-150"
+      whileTap={{ scale: 0.93 }}
     >
       {dark ? 'LIGHT' : 'DARK'}
-    </button>
+    </motion.button>
   )
 }

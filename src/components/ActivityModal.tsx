@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
 import { getGear } from '../server/gear'
 import { getGroupForActivity } from '../lib/groups'
@@ -32,11 +33,9 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const colors = groupConfig.color
 
     const ref = useRef<HTMLDivElement>(null)
-    const [closing, setClosing] = useState(false)
 
     function handleClose() {
-        setClosing(true)
-        setTimeout(() => onClose(), 150)
+        onClose()
     }
 
     useEffect(() => {
@@ -98,13 +97,21 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             onClick={handleClose}
         >
-            <div
-              className={`absolute inset-0 bg-bg/90 ${closing ? 'animate-fade-out' : 'animate-fade-in'}`}
+            <motion.div
+                className="absolute inset-0 bg-bg/90"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
             />
-            <div
+            <motion.div
                 ref={ref}
                 onClick={(e) => e.stopPropagation()}
-                className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-border bg-surface ${closing ? 'animate-fade-out' : 'animate-fade-in'}`}
+                className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-border bg-surface"
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             >
                 <div
                   className="h-1 w-full"
@@ -245,7 +252,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                         </div>
                     )}
                 </div>
-            </div>
+            </motion.div>
         </div>
     )
 }

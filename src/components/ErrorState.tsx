@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion'
+
 interface ErrorStateProps {
   message: string
   onRetry?: () => void
@@ -5,7 +7,12 @@ interface ErrorStateProps {
 
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-border">
+    <motion.div
+      className="flex flex-col items-center justify-center py-24 text-center border-2 border-border"
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
       <p className="font-mono text-sm font-bold text-text uppercase tracking-tight">Error</p>
       <p className="font-mono text-xs text-text-muted mt-2 max-w-md">{message}</p>
       {onRetry && (
@@ -16,6 +23,6 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
           Retry
         </button>
       )}
-    </div>
+    </motion.div>
   )
 }

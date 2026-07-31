@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { getActivities } from '../server/activities'
@@ -129,12 +130,14 @@ function Dashboard() {
           {isFetching && (
             <p className="font-mono text-xs text-text-muted mb-2 uppercase tracking-tight">Refreshing...</p>
           )}
-          <ActivityList activities={filtered} onCardClick={handleCardClick} />
+          <ActivityList key={group ?? 'all'} activities={filtered} onCardClick={handleCardClick} />
         </>
       )}
-      {selectedActivity && (
-        <ActivityModal activity={selectedActivity} onClose={handleCloseModal} />
-      )}
+      <AnimatePresence>
+        {selectedActivity && (
+          <ActivityModal key={selectedActivity.id} activity={selectedActivity} onClose={handleCloseModal} />
+        )}
+      </AnimatePresence>
       <BackToTop />
     </div>
   )

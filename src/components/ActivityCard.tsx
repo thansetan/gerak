@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config';
 import { getGroupForActivity } from '../lib/groups';
 import { formatDate } from '../lib/formatters';
@@ -23,9 +24,12 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
     const color = groupConfig.color
 
     return (
-        <div
+        <motion.div
             onClick={onClick}
-            className={`border-2 border-border bg-surface group h-full flex flex-col ${onClick ? 'cursor-pointer lg:hover:border-text transition-colors duration-150' : ''}`}
+            className={`border-2 border-border bg-surface group h-full flex flex-col ${onClick ? 'cursor-pointer' : ''}`}
+            whileHover={onClick ? { y: -2, borderColor: color.accent } : undefined}
+            whileTap={onClick ? { scale: 0.98 } : undefined}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         >
             <div
               className="h-1 w-full"
@@ -58,7 +62,7 @@ export function ActivityCard({ activity, onClick }: ActivityCardProps) {
                         })}
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
