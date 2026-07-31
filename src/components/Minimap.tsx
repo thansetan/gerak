@@ -1,4 +1,4 @@
-import { useMemo, useRef, useLayoutEffect, useState } from 'react'
+import { useCallback, useMemo, useRef, useLayoutEffect, useState } from 'react'
 import { motion, useMotionValue, animate } from 'framer-motion'
 import { decodePolyline } from '../lib/polyline'
 
@@ -49,8 +49,8 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
   const height = Math.round(width / aspect)
   const maxDim = Math.max(width, height)
 
-  const toX = (lng: number) => ((lng - minLng + padding) / viewLng) * width
-  const toY = (lat: number) => ((maxLat - lat + padding) / viewLat) * height
+  const toX = useCallback((lng: number) => ((lng - minLng + padding) / viewLng) * width, [minLng, viewLng])
+  const toY = useCallback((lat: number) => ((maxLat - lat + padding) / viewLat) * height, [maxLat, viewLat])
 
   const pathD = useMemo(
     () =>
@@ -76,35 +76,56 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
   const arrowAngle = useMotionValue(0)
 
   useLayoutEffect(() => {
-    if (skipAnimation) return
+    if (!pathRef.current) return
+
+    if (skipAnimation) {
+      pathRef.current.setAttribute('d', pathD)
+      return
+    }
 
     setShowEnd(false)
     arrowX.set(startX)
     arrowY.set(startY)
     arrowAngle.set(0)
 
+    const pts = path.map(([lat, lng]) => [toX(lng), toY(lat)])
+    const cumLen = [0]
+    for (let i = 1; i < pts.length; i++) {
+      cumLen.push(cumLen[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]))
+    }
+    const totalLen = cumLen[cumLen.length - 1]
+
+    let index = 0
     const controls = animate(0, 1, {
       duration,
       ease: 'easeOut',
       onUpdate: (progress) => {
-        if (!pathRef.current) return
-        const len = pathRef.current.getTotalLength()
-        const p = pathRef.current.getPointAtLength(progress * len)
-        arrowX.set(p.x)
-        arrowY.set(p.y)
+        const target = progress * totalLen
+        while (index < pts.length - 2 && cumLen[index + 1] < target) index++
+        const segStart = cumLen[index]
+        const segLen = cumLen[index + 1] - segStart
+        const t = segLen > 0 ? Math.min(1, (target - segStart) / segLen) : 0
+        const x = pts[index][0] + (pts[index + 1][0] - pts[index][0]) * t
+        const y = pts[index][1] + (pts[index + 1][1] - pts[index][1]) * t
 
-        const ahead = pathRef.current.getPointAtLength(Math.min(progress + 0.002, 1) * len)
-        const angle = Math.atan2(ahead.y - p.y, ahead.x - p.x) * (180 / Math.PI)
+        const drawn = pts.slice(0, index + 1).map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]},${p[1]}`)
+        drawn.push(`L ${x},${y}`)
+        pathRef.current?.setAttribute('d', drawn.join(' '))
+
+        arrowX.set(x)
+        arrowY.set(y)
+        const angle = Math.atan2(pts[index + 1][1] - y, pts[index + 1][0] - x) * (180 / Math.PI)
         arrowAngle.set(angle)
       },
       onComplete: () => {
+        pathRef.current?.setAttribute('d', pathD)
         setShowEnd(true)
         onAnimationComplete?.()
       },
     })
 
     return () => controls.stop()
-  }, [skipAnimation, onAnimationComplete, summaryPolyline, startX, startY, duration])
+  }, [skipAnimation, onAnimationComplete, path, toX, toY, pathD, startX, startY, duration])
 
   const arrowSize = maxDim * 0.012
 
@@ -127,8 +148,7 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
           opacity={0.9}
           initial={skipAnimation ? undefined : { pathLength: 0 }}
           animate={skipAnimation ? undefined : { pathLength: 1 }}
-          transition={skipAnimation ? undefined : { duration, ease: 'easeOut' }}
-        />
+/>
         {!showEnd && (
         <motion.g
           style={{
