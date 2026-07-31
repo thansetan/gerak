@@ -107,18 +107,19 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
             <motion.div
                 ref={ref}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-border bg-surface"
+                className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto border-2 border-border bg-surface"
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             >
+                <div className="sticky top-0 z-10 bg-surface">
                 <div
-                  className="h-1 w-full"
+                  className="h-1.5 w-full"
                   style={{ backgroundColor: colors.accent }}
                 />
 
-                <div className="sticky top-0 z-10 flex items-start justify-between bg-surface p-5 pb-3 border-b-2 border-border">
+                <div className="flex items-start justify-between p-5 pb-3 border-b-2 border-border">
                     <div className="flex-1 min-w-0">
                         {modalHeader.showTitle && (
                             <h2 className="font-mono text-lg font-bold text-text leading-snug">
@@ -159,6 +160,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                             ESC
                         </button>
                     </div>
+                </div>
                 </div>
 
                 <div className="p-5 pt-4 space-y-4">
