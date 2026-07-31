@@ -3,7 +3,7 @@ import { HeadContent, Outlet, Scripts, createRootRouteWithContext, redirect } fr
 import { QueryClientProvider } from '@tanstack/react-query'
 import type { QueryClient } from '@tanstack/react-query'
 import type React from 'react'
-import { NotFound } from '../components/NotFound'
+import { NotFound } from '../components/ui/NotFound'
 import styles from '../styles.css?url'
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({

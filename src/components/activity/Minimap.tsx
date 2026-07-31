@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useLayoutEffect, useState } from 'react'
 import { motion, useMotionValue, animate } from 'framer-motion'
-import { decodePolyline } from '../lib/polyline'
+import { decodePolyline } from '../../shared/lib/polyline'
 
 interface MinimapProps {
   summaryPolyline: string

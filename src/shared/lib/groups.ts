@@ -1,4 +1,4 @@
-import { ACTIVITY_GROUPS } from '../server/config'
+import { ACTIVITY_GROUPS } from '../config'
 
 export function getGroupForActivity(sportType: string): string {
   for (const group of Object.values(ACTIVITY_GROUPS)) {

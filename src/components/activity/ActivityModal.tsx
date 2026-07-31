@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
-import { getGear } from '../server/gear'
-import { getGroupForActivity } from '../lib/groups'
+import { ACTIVITY_GROUPS, APP_CONFIG } from '../../shared/config'
+import { getGear } from '../../server/gear'
+import { getGroupForActivity } from '../../shared/lib/groups'
 import { Minimap } from './Minimap'
-import { formatDateTime, getTimezoneLabel, getGearDisplayValue } from '../lib/formatters'
-import type { StatConfig, StravaActivity } from '../server/types'
+import { formatDateTime, getTimezoneLabel, getGearDisplayValue } from '../../shared/lib/formatters'
+import type { StatConfig, StravaActivity } from '../../shared/types'
 
 const seenAnimations = new Set<string>()
 

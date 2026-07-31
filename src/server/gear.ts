@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { getAccessToken } from './auth'
 import { getFromCache, setToCache } from './cache'
 import { ACTIVITIES_CACHE_KEY } from './activities'
-import type { GearDetail, ActivitiesResponse } from './types'
+import type { GearDetail, ActivitiesResponse } from '../shared/types'
 
 const GEAR_CACHE_KEY = 'strava:gear'
 const GEAR_TTL = 604800

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
-import { ThemeToggle } from './ThemeToggle'
-import { formatDate, formatDateTime, getTimezoneLabel } from '../lib/formatters'
-import { AthleteProfile } from '~/server/types';
+import { ThemeToggle } from '../ui/ThemeToggle'
+import { formatDate, formatDateTime, getTimezoneLabel } from '../../shared/lib/formatters'
+import { AthleteProfile } from '~/shared/types';
 
 interface HeaderProps {
   syncedAt?: string

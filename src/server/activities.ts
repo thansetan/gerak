@@ -1,8 +1,8 @@
 import { createServerFn } from '@tanstack/react-start';
 import { getAccessToken } from './auth';
 import { getFromCache, setToCache } from './cache';
-import type { ActivitiesResponse, StravaActivity } from './types';
-import { APP_CONFIG } from './config';
+import type { ActivitiesResponse, StravaActivity } from '../shared/types';
+import { APP_CONFIG } from '../shared/config';
 
 const FETCH_WINDOW = '1year';
 export const ACTIVITIES_CACHE_KEY = `strava:activities:${APP_CONFIG.maxFetchedActivities}:${FETCH_WINDOW}`;

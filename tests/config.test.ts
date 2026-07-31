@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test'
-import { ACTIVITY_GROUPS, APP_CONFIG } from '../src/server/config'
-import type { StravaActivity } from '../src/server/types'
+import { ACTIVITY_GROUPS, APP_CONFIG } from '../src/shared/config'
+import type { StravaActivity } from '../src/shared/types'
 
 const mockActivity: StravaActivity = {
     id: 1,

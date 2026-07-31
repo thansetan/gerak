@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getAccessToken } from './auth'
 import { getFromCache, setToCache } from './cache'
-import type { AthleteProfile } from './types'
+import type { AthleteProfile } from '../shared/types'
 
 const ATHLETE_CACHE_KEY = 'strava:athlete'
 const ATHLETE_TTL = 86400

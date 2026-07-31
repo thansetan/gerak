@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion'
 import type { Variants } from 'framer-motion'
-import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
-import type { StatsBarConfig, StatsBarStatConfig } from '../server/types'
+import { ACTIVITY_GROUPS, APP_CONFIG } from '../../shared/config'
+import type { StatsBarConfig, StatsBarStatConfig } from '../../shared/types'
 
 interface AggregateStats {
   totalDistance: number

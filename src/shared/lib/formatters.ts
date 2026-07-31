@@ -1,4 +1,4 @@
-import { APP_CONFIG } from '../server/config'
+import { APP_CONFIG } from '../config'
 
 const dateFmt = new Intl.DateTimeFormat('en-GB', {
   day: '2-digit',

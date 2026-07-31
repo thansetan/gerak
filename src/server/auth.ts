@@ -1,5 +1,5 @@
 import { getFromCache, setToCacheRaw, deleteCacheKey } from './cache'
-import type { StravaTokenResponse } from './types'
+import type { StravaTokenResponse } from '../shared/types'
 
 const TOKEN_CACHE_KEY = 'strava:access_token'
 const TOKEN_TTL = 21600

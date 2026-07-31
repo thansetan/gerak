@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { getGroupForActivity, getGroupNames, getGroupLabel } from './groups'
-import type { StravaActivity } from '../server/types'
+import { getGroupForActivity, getGroupNames, getGroupLabel } from '../shared/lib/groups'
+import type { StravaActivity } from '../shared/types'
 
 interface GroupCount {
   name: string

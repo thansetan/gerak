@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import type { StravaActivity } from '../server/types'
+import type { StravaActivity } from '../../shared/types'
 import { ActivityCard } from './ActivityCard'
 
 interface ActivityListProps {

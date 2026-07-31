@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { StravaTokenResponse } from './types';
+import { StravaTokenResponse } from '../shared/types';
 
 export const isAuthenticated = createServerFn({ method: 'GET' })
   .handler(async () => !!process.env.STRAVA_REFRESH_TOKEN)

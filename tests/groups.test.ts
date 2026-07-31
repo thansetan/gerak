@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test'
-import { getGroupForActivity, getGroupNames, getGroupLabel } from '../src/lib/groups'
+import { getGroupForActivity, getGroupNames, getGroupLabel } from '../src/shared/lib/groups'
 
 describe('getGroupForActivity', () => {
   it('classifies TrailRun as run', () => {

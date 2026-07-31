@@ -4,7 +4,7 @@ import {
   getTimezoneLabel,
   formatDate,
   formatDateTime,
-} from '../src/lib/formatters'
+} from '../src/shared/lib/formatters'
 
 describe('getGearDisplayValue', () => {
   const gear = {

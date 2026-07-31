@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config';
-import { getGroupForActivity } from '../lib/groups';
-import { formatDate } from '../lib/formatters';
-import type { StatConfig, StravaActivity } from '../server/types';
+import { ACTIVITY_GROUPS, APP_CONFIG } from '../../shared/config';
+import { getGroupForActivity } from '../../shared/lib/groups';
+import { formatDate } from '../../shared/lib/formatters';
+import type { StatConfig, StravaActivity } from '../../shared/types';
 
 interface ActivityCardProps {
     activity: StravaActivity;
