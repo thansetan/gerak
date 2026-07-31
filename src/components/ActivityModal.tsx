@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../server/config'
 import { getGear } from '../server/gear'
@@ -6,6 +6,8 @@ import { getGroupForActivity } from '../lib/groups'
 import { Minimap } from './Minimap'
 import { formatDateTime, getTimezoneLabel, getGearDisplayValue } from '../lib/formatters'
 import type { StatConfig, StravaActivity } from '../server/types'
+
+const seenAnimations = new Set<string>()
 
 function statDisplay(stat: StatConfig, activity: StravaActivity): string | null {
     if (stat.state === 'hide') return null
@@ -85,6 +87,12 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const contentBeforeMetrics = showMinimap || heroStats.length > 0
     const contentBeforeDetails = contentBeforeMetrics || hasAnyMetrics
 
+    const polyline = activity.map?.summary_polyline
+    const skipAnimation = !modalHeader.minimapAnimation || (polyline ? seenAnimations.has(polyline) : true)
+    const handleAnimationComplete = useCallback(() => {
+        if (polyline) seenAnimations.add(polyline)
+    }, [polyline])
+
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -147,11 +155,14 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                 </div>
 
                 <div className="p-5 pt-4 space-y-4">
-                    {showMinimap && (
+                    {polyline && modalHeader.showMinimap && (
                         <Minimap
-                            summaryPolyline={activity.map.summary_polyline}
+                            key={polyline}
+                            summaryPolyline={polyline}
                             accentColor={colors.accent}
                             bgColor={colors.bg}
+                            skipAnimation={skipAnimation}
+                            onAnimationComplete={handleAnimationComplete}
                         />
                     )}
 

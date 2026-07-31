@@ -92,6 +92,7 @@ export interface ActivityGroup {
 
 export interface ModalConfig {
     showMinimap: boolean
+    minimapAnimation: boolean
     showTitle: boolean
     showActivityTime: boolean
     showAchievements: boolean
