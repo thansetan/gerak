@@ -169,6 +169,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                     {polyline && modalHeader.showMinimap && (
                         <Minimap
                             key={polyline}
+                            distance={activity.distance}
                             summaryPolyline={polyline}
                             accentColor={colors.accent}
                             bgColor={colors.bg}

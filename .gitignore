@@ -8,3 +8,4 @@ dist/
 .agents
 .opencode
 openspec
+launch.json

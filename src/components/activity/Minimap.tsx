@@ -5,6 +5,7 @@ import { decodePolyline } from '../../shared/lib/polyline'
 interface MinimapProps {
   summaryPolyline: string
   accentColor: string
+  distance: number
   bgColor: string
   skipAnimation?: boolean
   animateRoute?: boolean
@@ -60,7 +61,7 @@ function approximateDistance(path: [number, number][]): number {
   return total
 }
 
-export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation = false, animateRoute = true, onAnimationComplete }: MinimapProps) {
+export function Minimap({ summaryPolyline, distance, accentColor, bgColor, skipAnimation = false, animateRoute = true, onAnimationComplete }: MinimapProps) {
   const path = useMemo(() => decodePolyline(summaryPolyline), [summaryPolyline])
 
   if (path.length < 2) return null
@@ -125,8 +126,7 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
   const [startX, startY] = toPoint(path[0][0], path[0][1])
   const [endX, endY] = toPoint(path[path.length - 1][0], path[path.length - 1][1])
 
-  const distance = useMemo(() => approximateDistance(path), [path])
-  const duration = Math.max(2, Math.min(6, distance / 5000))
+  const duration = Math.max(2, Math.min(10, distance / 4000))
 
   const [phase, setPhase] = useState<'idle' | 'animating' | 'done'>('idle')
 
