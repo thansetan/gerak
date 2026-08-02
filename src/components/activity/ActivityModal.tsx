@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { ACTIVITY_GROUPS, APP_CONFIG } from '../../shared/config'
@@ -33,6 +33,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
     const colors = groupConfig.color
 
     const ref = useRef<HTMLDivElement>(null)
+    const [modalReady, setModalReady] = useState(false)
 
     function handleClose() {
         onClose()
@@ -112,6 +113,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                onAnimationComplete={() => setModalReady(true)}
             >
                 <div className="sticky top-0 z-10 bg-surface">
                 <div
@@ -171,6 +173,7 @@ export function ActivityModal({ activity, onClose }: ActivityModalProps) {
                             accentColor={colors.accent}
                             bgColor={colors.bg}
                             skipAnimation={skipAnimation}
+                            animateRoute={modalReady}
                             onAnimationComplete={handleAnimationComplete}
                         />
                     )}

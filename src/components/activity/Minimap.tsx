@@ -7,6 +7,7 @@ interface MinimapProps {
   accentColor: string
   bgColor: string
   skipAnimation?: boolean
+  animateRoute?: boolean
   onAnimationComplete?: () => void
 }
 
@@ -59,7 +60,7 @@ function approximateDistance(path: [number, number][]): number {
   return total
 }
 
-export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation = false, onAnimationComplete }: MinimapProps) {
+export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation = false, animateRoute = true, onAnimationComplete }: MinimapProps) {
   const path = useMemo(() => decodePolyline(summaryPolyline), [summaryPolyline])
 
   if (path.length < 2) return null
@@ -127,7 +128,7 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
   const distance = useMemo(() => approximateDistance(path), [path])
   const duration = Math.max(2, Math.min(6, distance / 5000))
 
-  const [showEnd, setShowEnd] = useState(true)
+  const [phase, setPhase] = useState<'idle' | 'animating' | 'done'>('idle')
 
   const pathRef = useRef<SVGPathElement>(null)
   const arrowX = useMotionValue(startX)
@@ -139,10 +140,17 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
 
     if (skipAnimation) {
       pathRef.current.setAttribute('d', pathD)
+      setPhase('done')
       return
     }
 
-    setShowEnd(false)
+    if (!animateRoute) {
+      pathRef.current.setAttribute('d', '')
+      setPhase('idle')
+      return
+    }
+
+    setPhase('animating')
     arrowX.set(startX)
     arrowY.set(startY)
     arrowAngle.set(0)
@@ -178,13 +186,13 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
       },
       onComplete: () => {
         pathRef.current?.setAttribute('d', pathD)
-        setShowEnd(true)
+        setPhase('done')
         onAnimationComplete?.()
       },
     })
 
     return () => controls.stop()
-  }, [skipAnimation, onAnimationComplete, path, toPoint, pathD, startX, startY, duration])
+  }, [skipAnimation, animateRoute, onAnimationComplete, path, toPoint, pathD, startX, startY, duration])
 
   const arrowSize = maxDim * 0.012
 
@@ -195,6 +203,13 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
         className="w-full h-auto"
         style={{ maxHeight: '160px' }}
       >
+        <defs>
+          <pattern id="finish-checker" patternUnits="userSpaceOnUse" width={maxDim * 0.008} height={maxDim * 0.008}>
+            <rect width={maxDim * 0.008} height={maxDim * 0.008} fill="#ffffff" />
+            <rect width={maxDim * 0.004} height={maxDim * 0.004} fill="#0f172a" />
+            <rect x={maxDim * 0.004} y={maxDim * 0.004} width={maxDim * 0.004} height={maxDim * 0.004} fill="#0f172a" />
+          </pattern>
+        </defs>
         {tiles.map((t) => (
           <image key={t.key} href={t.url} x={t.x} y={t.y} width={TILE_SIZE} height={TILE_SIZE} />
         ))}
@@ -208,10 +223,10 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity={0.9}
-          initial={skipAnimation ? undefined : { pathLength: 0 }}
-          animate={skipAnimation ? undefined : { pathLength: 1 }}
+          initial={skipAnimation || !animateRoute ? undefined : { pathLength: 0 }}
+          animate={skipAnimation || !animateRoute ? undefined : { pathLength: 1 }}
         />
-        {!showEnd && (
+        {phase === 'animating' && (
           <motion.g
             style={{
               translateX: arrowX,
@@ -231,17 +246,18 @@ export function Minimap({ summaryPolyline, accentColor, bgColor, skipAnimation =
           </motion.g>
         )}
         <circle cx={startX} cy={startY} r={maxDim * 0.012} fill="#22c55e" stroke="white" strokeWidth={maxDim * 0.003} />
-        {showEnd && (
+        {phase === 'done' && (
           <motion.circle
             cx={endX}
             cy={endY}
             r={maxDim * 0.012}
-            fill="#ef4444"
+            fill="url(#finish-checker)"
             stroke="white"
             strokeWidth={maxDim * 0.003}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
+            style={{ transformOrigin: `${endX}px ${endY}px` }}
           />
         )}
       </svg>
