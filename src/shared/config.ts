@@ -37,7 +37,7 @@ const DEFAULT_STATS: StatsConfig = {
         highlightInModal: false,
     },
     maxHeartRate: {
-        state: 'show',
+        state: 'hide',
         label: 'Max HR',
         unit: 'bpm',
         valueCalculation: (a) => a.max_heartrate != null ? Math.round(a.max_heartrate).toString() : null,
