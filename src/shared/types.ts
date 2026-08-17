@@ -118,6 +118,12 @@ export interface GearConfig {
     value: GearValueDisplay
 }
 
+export interface AnnouncementConfig {
+    shown: boolean
+    title: string
+    message: string
+}
+
 export interface AppConfig {
     cardClick: 'modal' | 'none'
     modalHeader: ModalConfig
@@ -125,6 +131,7 @@ export interface AppConfig {
     maskedValue: string
     timezone: string
     maxFetchedActivities: number
+    announcement?: AnnouncementConfig
 }
 
 export interface ActivitiesResponse {

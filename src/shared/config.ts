@@ -333,4 +333,9 @@ export const APP_CONFIG: AppConfig = {
         showKudos: true,
     },
     statsBar: DEFAULT_STATS_BAR,
+    announcement: {
+        shown: true,
+        title: 'Ga lari dulu',
+        message: 'Recovering from shin splints — back on the road soon!',
+    },
 };

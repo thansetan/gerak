@@ -62,7 +62,7 @@ describe('ACTIVITY_GROUPS', () => {
     const s = ACTIVITY_GROUPS.run.stats
     expect(s.distance?.state).toBe('show')
     expect(s.avgHeartRate?.state).toBe('show')
-    expect(s.maxHeartRate?.state).toBe('show')
+    expect(s.maxHeartRate?.state).toBe('hide')
     expect(s.pace?.state).toBe('show')
     expect(s.avgPower?.state).toBe('show')
   })

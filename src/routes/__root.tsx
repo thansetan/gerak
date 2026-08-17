@@ -4,6 +4,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import type { QueryClient } from '@tanstack/react-query'
 import type React from 'react'
 import { NotFound } from '../components/ui/NotFound'
+import { AnnouncementModal } from '../components/ui/AnnouncementModal'
 import styles from '../styles.css?url'
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -28,6 +29,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      <AnnouncementModal />
     </QueryClientProvider>
   )
 }
