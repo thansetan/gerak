@@ -1,12 +1,11 @@
 import { createServerFn } from '@tanstack/react-start';
+import { APP_CONFIG } from '../shared/config';
+import type { ActivitiesResponse, StravaActivity } from '../shared/types';
 import { getAccessToken } from './auth';
 import { getFromCache, setToCache } from './cache';
-import type { ActivitiesResponse, StravaActivity } from '../shared/types';
-import { APP_CONFIG } from '../shared/config';
+import { getValidatedConfig } from './validatedConfig';
 
-const FETCH_WINDOW = '1year';
-export const ACTIVITIES_CACHE_KEY = `strava:activities:${APP_CONFIG.maxFetchedActivities}:${FETCH_WINDOW}`;
-const ACTIVITIES_TTL = 3600;
+export const ACTIVITIES_CACHE_KEY = `strava:activities:${APP_CONFIG.maxFetchedActivities}:${APP_CONFIG.activityCacheTTL}`;
 
 export const getActivities = createServerFn().handler(async () => {
     const cached = await getFromCache<ActivitiesResponse>(ACTIVITIES_CACHE_KEY);
@@ -17,10 +16,11 @@ export const getActivities = createServerFn().handler(async () => {
 async function fetchActivitiesFromStrava(): Promise<ActivitiesResponse> {
     const token = await getAccessToken();
     const now = Math.floor(Date.now() / 1000);
-    const oneYearAgo = now - 365 * 24 * 60 * 60;
+    const validatedConfig = getValidatedConfig();
+    const since = now - validatedConfig.activityFetchDuration;
 
     const response = await fetch(
-        `https://www.strava.com/api/v3/athlete/activities?per_page=${APP_CONFIG.maxFetchedActivities}&after=${oneYearAgo}&before=${now}`,
+        `https://www.strava.com/api/v3/athlete/activities?per_page=${APP_CONFIG.maxFetchedActivities}&after=${since}&before=${now}`,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -32,14 +32,19 @@ async function fetchActivitiesFromStrava(): Promise<ActivitiesResponse> {
         const freshToken = await getAccessToken();
         console.log(freshToken);
         const retryResponse = await fetch(
-            `https://www.strava.com/api/v3/athlete/activities?per_page=${APP_CONFIG.maxFetchedActivities}&after=${oneYearAgo}&before=${now}`,
+            `https://www.strava.com/api/v3/athlete/activities?per_page=${APP_CONFIG.maxFetchedActivities}&after=${since}&before=${now}`,
             { headers: { Authorization: `Bearer ${freshToken}` } }
         );
         if (!retryResponse.ok) {
             return handleApiError(retryResponse);
         }
         const retryData = (await retryResponse.json()) as StravaActivity[];
-        return buildResponse(retryData, oneYearAgo, now);
+        return buildResponse(
+            retryData,
+            since,
+            now,
+            validatedConfig.activityCacheTTL
+        );
     }
 
     if (!response.ok) {
@@ -47,17 +52,23 @@ async function fetchActivitiesFromStrava(): Promise<ActivitiesResponse> {
     }
 
     const data = (await response.json()) as StravaActivity[];
-    return buildResponse(data, oneYearAgo, now);
+    return buildResponse(data, since, now, validatedConfig.activityCacheTTL);
 }
 
-function buildResponse(activities: StravaActivity[], windowStartEpoch: number, windowEndEpoch: number): ActivitiesResponse {
+function buildResponse(
+    activities: StravaActivity[],
+    windowStartEpoch: number,
+    windowEndEpoch: number,
+    activityCacheTTL: number
+): ActivitiesResponse {
     const result: ActivitiesResponse = {
         activities,
         syncedAt: new Date().toISOString(),
         fetchWindowStart: new Date(windowStartEpoch * 1000).toISOString(),
         fetchWindowEnd: new Date(windowEndEpoch * 1000).toISOString(),
     };
-    setToCache(ACTIVITIES_CACHE_KEY, result, ACTIVITIES_TTL);
+    setToCache(ACTIVITIES_CACHE_KEY, result, activityCacheTTL);
+
     return result;
 }
 

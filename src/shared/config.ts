@@ -1,11 +1,19 @@
-import type { ActivityGroup, AppConfig, StatsConfig, StatsBarConfig } from './types';
+import type {
+    ActivityGroup,
+    AppConfig,
+    StatsBarConfig,
+    StatsConfig,
+} from './types';
 
 const DEFAULT_STATS: StatsConfig = {
     distance: {
         state: 'show',
         label: 'Distance',
         unit: 'km',
-        valueCalculation: (a) => a.distance > 0 ? (Math.floor(a.distance / 1000 * 100) / 100).toFixed(2) : null,
+        valueCalculation: (a) =>
+            a.distance > 0
+                ? (Math.floor((a.distance / 1000) * 100) / 100).toFixed(2)
+                : null,
         showInCard: true,
         type: 'metric',
         highlightInModal: true,
@@ -31,7 +39,10 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Avg HR',
         unit: 'bpm',
-        valueCalculation: (a) => a.average_heartrate != null ? Math.round(a.average_heartrate).toString() : null,
+        valueCalculation: (a) =>
+            a.average_heartrate != null
+                ? Math.round(a.average_heartrate).toString()
+                : null,
         showInCard: true,
         type: 'metric',
         highlightInModal: false,
@@ -40,7 +51,10 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'hide',
         label: 'Max HR',
         unit: 'bpm',
-        valueCalculation: (a) => a.max_heartrate != null ? Math.round(a.max_heartrate).toString() : null,
+        valueCalculation: (a) =>
+            a.max_heartrate != null
+                ? Math.round(a.max_heartrate).toString()
+                : null,
         showInCard: true,
         type: 'metric',
         highlightInModal: false,
@@ -54,8 +68,8 @@ const DEFAULT_STATS: StatsConfig = {
             const mpk = 1000 / a.average_speed / 60;
             const min = Math.floor(mpk);
             const sec = Math.round((mpk - min) * 60);
-            
-            return `${min + Math.floor(sec /60)}:${(sec % 60).toString().padStart(2, '0')}`;
+
+            return `${min + Math.floor(sec / 60)}:${(sec % 60).toString().padStart(2, '0')}`;
         },
         showInCard: true,
         type: 'metric',
@@ -65,7 +79,10 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Avg Power',
         unit: 'W',
-        valueCalculation: (a) => a.average_watts != null ? Math.round(a.average_watts).toString() : null,
+        valueCalculation: (a) =>
+            a.average_watts != null
+                ? Math.round(a.average_watts).toString()
+                : null,
         showInCard: true,
         type: 'metric',
         highlightInModal: false,
@@ -74,7 +91,10 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Avg Cadence',
         unit: 'spm',
-        valueCalculation: (a) => a.average_cadence != null ? Math.round(a.average_cadence * 2).toString() : null,
+        valueCalculation: (a) =>
+            a.average_cadence != null
+                ? Math.round(a.average_cadence * 2).toString()
+                : null,
         showInCard: true,
         type: 'metric',
         highlightInModal: false,
@@ -83,7 +103,10 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Elevation Gain',
         unit: 'm',
-        valueCalculation: (a) => a.total_elevation_gain > 0 ? Math.round(a.total_elevation_gain).toString() : null,
+        valueCalculation: (a) =>
+            a.total_elevation_gain > 0
+                ? Math.round(a.total_elevation_gain).toString()
+                : null,
         showInCard: true,
         type: 'metric',
         highlightInModal: false,
@@ -92,7 +115,8 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'hide',
         label: 'Avg Speed',
         unit: 'km/h',
-        valueCalculation: (a) => a.average_speed > 0 ? (a.average_speed * 3.6).toFixed(1) : null,
+        valueCalculation: (a) =>
+            a.average_speed > 0 ? (a.average_speed * 3.6).toFixed(1) : null,
         showInCard: false,
         type: 'metric',
         highlightInModal: false,
@@ -101,7 +125,8 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Max Speed',
         unit: 'km/h',
-        valueCalculation: (a) => a.max_speed > 0 ? (a.max_speed * 3.6).toFixed(1) : null,
+        valueCalculation: (a) =>
+            a.max_speed > 0 ? (a.max_speed * 3.6).toFixed(1) : null,
         showInCard: false,
         type: 'metric',
         highlightInModal: false,
@@ -110,7 +135,8 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Max Power',
         unit: 'W',
-        valueCalculation: (a) => a.max_watts != null ? Math.round(a.max_watts).toString() : null,
+        valueCalculation: (a) =>
+            a.max_watts != null ? Math.round(a.max_watts).toString() : null,
         showInCard: false,
         type: 'metric',
         highlightInModal: false,
@@ -119,7 +145,10 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Weighted Power',
         unit: 'W',
-        valueCalculation: (a) => a.weighted_average_watts != null ? Math.round(a.weighted_average_watts).toString() : null,
+        valueCalculation: (a) =>
+            a.weighted_average_watts != null
+                ? Math.round(a.weighted_average_watts).toString()
+                : null,
         showInCard: false,
         type: 'metric',
         highlightInModal: false,
@@ -128,7 +157,10 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'hide',
         label: 'Calories',
         unit: 'kJ',
-        valueCalculation: (a) => a.kilojoules != null && a.kilojoules > 0 ? Math.round(a.kilojoules * 0.239).toString() : null,
+        valueCalculation: (a) =>
+            a.kilojoules != null && a.kilojoules > 0
+                ? Math.round(a.kilojoules * 0.239).toString()
+                : null,
         showInCard: false,
         type: 'metric',
         highlightInModal: false,
@@ -137,7 +169,10 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Elev Range',
         unit: '',
-        valueCalculation: (a) => a.elev_low != null && a.elev_high != null ? `${Math.round(a.elev_low)}m - ${Math.round(a.elev_high)}m` : null,
+        valueCalculation: (a) =>
+            a.elev_low != null && a.elev_high != null
+                ? `${Math.round(a.elev_low)}m - ${Math.round(a.elev_high)}m`
+                : null,
         showInCard: false,
         type: 'metric',
         highlightInModal: false,
@@ -156,7 +191,7 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'hide',
         label: 'Private',
         unit: '',
-        valueCalculation: (a) => a.private ? 'Private' : null,
+        valueCalculation: (a) => (a.private ? 'Private' : null),
         showInCard: false,
         type: 'detail',
         highlightInModal: false,
@@ -166,7 +201,7 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Commute',
         unit: '',
-        valueCalculation: (a) => a.commute ? 'Commute' : null,
+        valueCalculation: (a) => (a.commute ? 'Commute' : null),
         showInCard: false,
         type: 'detail',
         highlightInModal: false,
@@ -176,7 +211,7 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Indoor',
         unit: '',
-        valueCalculation: (a) => a.trainer ? 'Indoor' : null,
+        valueCalculation: (a) => (a.trainer ? 'Indoor' : null),
         showInCard: false,
         type: 'detail',
         highlightInModal: false,
@@ -186,7 +221,7 @@ const DEFAULT_STATS: StatsConfig = {
         state: 'show',
         label: 'Manual',
         unit: '',
-        valueCalculation: (a) => a.manual ? 'Manual' : null,
+        valueCalculation: (a) => (a.manual ? 'Manual' : null),
         showInCard: false,
         type: 'detail',
         highlightInModal: false,
@@ -260,7 +295,12 @@ export const ACTIVITY_GROUPS: Record<string, ActivityGroup> = {
         stats: {
             ...DEFAULT_STATS,
             pace: { ...DEFAULT_STATS.pace, state: 'hide' },
-            speed: { ...DEFAULT_STATS.speed, state: 'show', showInCard: true, highlightInModal: true },
+            speed: {
+                ...DEFAULT_STATS.speed,
+                state: 'show',
+                showInCard: true,
+                highlightInModal: true,
+            },
         },
         color: { accent: '#2563eb', bg: '#eff6ff' },
         cardClick: 'modal',
@@ -338,4 +378,8 @@ export const APP_CONFIG: AppConfig = {
         title: 'Ga lari dulu',
         message: 'Recovering from shin splints — back on the road soon!',
     },
+    activityFetchDuration: '1y',
+    activityCacheTTL: '1h',
+    gearCacheTTL: '7d',
+    tokenCacheTTL: '6h',
 };

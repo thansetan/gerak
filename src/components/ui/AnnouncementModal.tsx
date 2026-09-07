@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { APP_CONFIG } from '../../shared/config'
+import { useRouter } from '@tanstack/react-router';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { APP_CONFIG } from '../../shared/config';
 
 interface AnnouncementModalProps {
-    onClose?: () => void
+    onClose?: () => void;
 }
 
 /**
@@ -14,31 +15,35 @@ interface AnnouncementModalProps {
  * full page refresh. Controlled by APP_CONFIG.announcement.
  */
 export function AnnouncementModal({ onClose }: AnnouncementModalProps) {
-    const announcement = APP_CONFIG.announcement
-    const [dismissed, setDismissed] = useState(false)
+    const announcement = APP_CONFIG.announcement;
+    const [dismissed, setDismissed] = useState(false);
+    const router = useRouter();
 
-    const shown = announcement?.shown === true && !dismissed
+    const shown =
+        announcement?.shown === true &&
+        !dismissed &&
+        router.state.location.pathname === '/';
 
     function handleClose() {
-        setDismissed(true)
-        onClose?.()
+        setDismissed(true);
+        onClose?.();
     }
 
     useEffect(() => {
-        if (!shown) return
+        if (!shown) return;
         function onKeyDown(e: KeyboardEvent) {
-            if (e.key === 'Escape') handleClose()
+            if (e.key === 'Escape') handleClose();
         }
-        document.addEventListener('keydown', onKeyDown)
-        document.body.style.overflow = 'hidden'
+        document.addEventListener('keydown', onKeyDown);
+        document.body.style.overflow = 'hidden';
         return () => {
-            document.removeEventListener('keydown', onKeyDown)
-            document.body.style.overflow = ''
-        }
+            document.removeEventListener('keydown', onKeyDown);
+            document.body.style.overflow = '';
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [shown])
+    }, [shown]);
 
-    if (!shown) return null
+    if (!shown) return null;
 
     return (
         <div
@@ -80,5 +85,5 @@ export function AnnouncementModal({ onClose }: AnnouncementModalProps) {
                 </div>
             </motion.div>
         </div>
-    )
+    );
 }
