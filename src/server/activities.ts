@@ -5,7 +5,7 @@ import { getAccessToken } from './auth';
 import { getFromCache, setToCache } from './cache';
 import { getValidatedConfig } from './validatedConfig';
 
-export const ACTIVITIES_CACHE_KEY = `strava:activities:${APP_CONFIG.maxFetchedActivities}:${APP_CONFIG.activityCacheTTL}`;
+export const ACTIVITIES_CACHE_KEY = `strava:activities:${APP_CONFIG.maxFetchedActivities}:${APP_CONFIG.activityFetchDuration}`;
 
 export const getActivities = createServerFn().handler(async () => {
     const cached = await getFromCache<ActivitiesResponse>(ACTIVITIES_CACHE_KEY);
